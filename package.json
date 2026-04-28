@@ -1,0 +1,32 @@
+{
+  "name": "distro-match",
+  "version": "1.0.0",
+  "description": "A guided wizard to help users find the perfect Linux distribution",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/balaianu/distro-match.git"
+  },
+  "homepage": "https://distro-match.com",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/tailwind": "^6.0.2",
+    "astro": "^5.18.1",
+    "tailwindcss": "^3.4.17",
+    "twemoji": "^14.0.2"
+  },
+  "keywords": [
+    "linux",
+    "distro",
+    "wizard",
+    "astro",
+    "static-site"
+  ],
+  "author": "Andrei Balaianu",
+  "license": "MIT"
+}
