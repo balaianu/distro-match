@@ -11,12 +11,14 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "preview": "npm run build && wrangler dev",
+    "astro": "astro",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "12",
     "@astrojs/tailwind": "^6.0.2",
-    "astro": "^5.18.1",
+    "astro": "^6.1.6",
     "tailwindcss": "^3.4.17",
     "twemoji": "^14.0.2"
   },
@@ -28,5 +30,8 @@
     "static-site"
   ],
   "author": "Andrei Balaianu",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^4.86.0"
+  }
 }
