@@ -41,3 +41,7 @@ wrangler.toml
 
 # Cache
 .cache/
+
+.dev.vars*
+!.dev.vars.example
+!.env.example
