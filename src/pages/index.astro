@@ -1,0 +1,1210 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { questions } from '../scripts/wizard-state.js';
+import distros from '../data/distros.json';
+---
+
+<Layout 
+  title="Home"
+  description="Find your perfect Linux distribution with our interactive wizard. Answer questions about your experience level, hardware, desktop preferences, and use cases to get personalized recommendations for Ubuntu, Fedora, Arch, Debian, and 50+ other Linux distros."
+>
+  <div id="app" class="site-shell">
+    <!-- Content will be rendered by JavaScript -->
+  </div>
+</Layout>
+
+<script define:vars={{ questions, distros }}>
+  // Wizard state
+  const wizardState = {
+    currentStep: 0,
+    preferences: {
+      experienceLevel: null,
+      useCase: null,
+      hardware: {
+        ram: null,
+        cpu: null,
+        disk: null,
+      },
+      desktopEnvironment: null,
+      releaseModel: null,
+      packageManager: null,
+      supportLevel: null,
+      philosophy: null,
+    },
+  };
+
+  let showResults = false;
+  let recommendations = [];
+  let selectedOption = '';
+  let selectedOptions = []; // For multi-select
+  let hasStarted = false;
+  let previousStep = -1; // For slide transitions
+  let currentQuestionId = null; // Track current question to reset selections when changing
+
+  // Scoring weights
+  const WEIGHTS = {
+    experienceLevel: 0.30,
+    useCase: 0.25,
+    hardware: 0.20,
+    desktopEnvironment: 0.10,
+    releaseModel: 0.05,
+    packageManager: 0.05,
+    supportLevel: 0.03,
+    philosophy: 0.02,
+  };
+
+  // Scoring functions
+  function scoreExperienceLevel(distro, preference) {
+    if (!preference || preference === 'not_sure') return 0.5;
+    const experienceMap = {
+      beginner: ['beginner'],
+      intermediate: ['beginner', 'intermediate'],
+      advanced: ['intermediate', 'advanced'],
+      expert: ['advanced', 'expert'],
+    };
+    const acceptableLevels = experienceMap[preference] || [];
+    const exactMatch = distro.experience_level.some(level => level === preference);
+    const acceptableMatch = distro.experience_level.some(level => acceptableLevels.includes(level));
+    if (exactMatch) return 1;
+    if (acceptableMatch) return 0.8;
+    return 0.2;
+  }
+
+  function scoreUseCase(distro, preference) {
+    if (!preference || (Array.isArray(preference) && preference.length === 0) || preference === 'not_sure') return 0.5;
+    
+    const useCaseMap = {
+      general_desktop: ['general_desktop'],
+      development: ['general_desktop', 'development'],
+      server: ['server'],
+      security: ['security'],
+      gaming: ['general_desktop', 'gaming'],
+      content_creation: ['general_desktop', 'content_creation'],
+      old_hardware: ['general_desktop', 'old_hardware'],
+      privacy: ['general_desktop', 'privacy'],
+    };
+    
+    const preferences = Array.isArray(preference) ? preference : [preference];
+    let totalScore = 0;
+    let exactMatches = 0;
+    
+    for (const pref of preferences) {
+      if (pref === 'not_sure') continue;
+      const acceptableUseCases = useCaseMap[pref] || [pref];
+      const exactMatch = distro.use_cases.includes(pref);
+      const acceptableMatch = distro.use_cases.some(uc => acceptableUseCases.includes(uc));
+      if (exactMatch) {
+        totalScore += 1;
+        exactMatches++;
+      } else if (acceptableMatch) {
+        totalScore += 0.8;
+      } else {
+        totalScore += 0.2;
+      }
+    }
+    
+    const avgScore = Math.min(1, totalScore / preferences.length);
+    // Bonus for high exact match ratio
+    if (exactMatches === preferences.length && preferences.length > 1) {
+      return Math.min(1, avgScore + 0.1);
+    }
+    return avgScore;
+  }
+
+  function scoreHardware(distro, hardware) {
+    let score = 0.7;
+    let ramScore = 1, cpuScore = 1, diskScore = 1;
+    
+    if (hardware.ram && hardware.ram !== 'not_sure') {
+      const ramMap = { lt_2gb: 0, '2_4gb': 2, '4_8gb': 4, '8_16gb': 8, gt_16gb: 16 };
+      const requiredRam = ramMap[hardware.ram] || 4;
+      if (distro.min_ram_gb <= requiredRam) {
+        if (distro.min_ram_gb <= requiredRam / 2) ramScore = 1;
+        else if (distro.min_ram_gb <= requiredRam * 0.75) ramScore = 0.9;
+        else ramScore = 0.7;
+        // Bonus for matching recommended RAM
+        if (distro.recommended_ram_gb && distro.recommended_ram_gb <= requiredRam) {
+          ramScore = Math.min(1, ramScore + 0.1);
+        }
+      } else {
+        ramScore = 0.2;
+      }
+    }
+    
+    if (hardware.cpu && hardware.cpu !== 'not_sure') {
+      const cpuMap = { x86_64: ['x86_64'], i386: ['x86_64', 'i386'], arm64: ['x86_64', 'arm64'] };
+      const acceptableArch = cpuMap[hardware.cpu] || ['x86_64'];
+      if (distro.cpu_architecture.some(arch => acceptableArch.includes(arch))) {
+        cpuScore = 1;
+      } else {
+        cpuScore = 0.1;
+      }
+    }
+    
+    if (hardware.disk && hardware.disk !== 'not_sure') {
+      const diskMap = { lt_20gb: 0, '20_50gb': 20, '50_100gb': 50, gt_100gb: 100 };
+      const requiredDisk = diskMap[hardware.disk] || 20;
+      if (distro.min_disk_gb <= requiredDisk) {
+        if (distro.min_disk_gb <= requiredDisk * 0.5) diskScore = 1;
+        else if (distro.min_disk_gb <= requiredDisk * 0.75) diskScore = 0.9;
+        else diskScore = 0.7;
+      } else {
+        diskScore = 0.2;
+      }
+    }
+    
+    score = (ramScore * 0.4 + cpuScore * 0.3 + diskScore * 0.3);
+    return Math.max(0.1, Math.min(1, score));
+  }
+
+  function scoreDesktopEnvironment(distro, preference) {
+    if (!preference || (Array.isArray(preference) && preference.length === 0) || preference === 'no_preference') return 0.5;
+    
+    const deMap = {
+      gnome: ['GNOME'],
+      kde: ['KDE Plasma'],
+      xfce: ['XFCE'],
+      mate: ['MATE'],
+      cinnamon: ['Cinnamon'],
+      pantheon: ['Pantheon'],
+      i3: ['i3', 'Sway'],
+      lxqt: ['LXQt', 'LXDE'],
+    };
+    
+    const preferences = Array.isArray(preference) ? preference : [preference];
+    let totalScore = 0;
+    
+    for (const pref of preferences) {
+      if (pref === 'no_preference') continue;
+      const acceptableDEs = deMap[pref] || [];
+      if (acceptableDEs.length === 0) {
+        totalScore += 0.5;
+        continue;
+      }
+      if (distro.desktop_environments.includes('Any')) {
+        totalScore += 0.9;
+        continue;
+      }
+      const exactMatch = distro.desktop_environments.some(de => de === pref || acceptableDEs.includes(de));
+      if (exactMatch) totalScore += 1;
+      else totalScore += 0.3;
+    }
+    
+    return Math.min(1, totalScore / preferences.length);
+  }
+
+  function scoreReleaseModel(distro, preference) {
+    if (!preference || preference === 'no_preference') return 0.5;
+    const modelMap = {
+      stable_lts: ['stable_lts'],
+      semi_rolling: ['semi_rolling'],
+      rolling: ['rolling', 'semi_rolling'],
+      fixed_release: ['fixed_release', 'stable_lts'],
+    };
+    const acceptableModels = modelMap[preference] || [];
+    const exactMatch = distro.release_model === preference;
+    const acceptableMatch = acceptableModels.includes(distro.release_model);
+    if (exactMatch) return 1;
+    if (acceptableMatch) return 0.7;
+    return 0.3;
+  }
+
+  function scorePackageManager(distro, preference) {
+    if (!preference || preference === 'no_preference') return 0.5;
+    const pmMap = {
+      apt: ['apt'],
+      dnf: ['dnf'],
+      pacman: ['pacman'],
+      portage: ['portage'],
+      flatpak: ['apt', 'dnf', 'pacman'],
+      snap: ['apt'],
+      zypper: ['zypper'],
+    };
+    const acceptablePMs = pmMap[preference] || [];
+    const exactMatch = distro.package_manager === preference;
+    const acceptableMatch = acceptablePMs.includes(distro.package_manager);
+    if (exactMatch) return 1;
+    if (acceptableMatch) return 0.7;
+    return 0.3;
+  }
+
+  function scoreSupportLevel(distro, preference) {
+    if (!preference || (Array.isArray(preference) && preference.length === 0) || preference === 'no_preference') return 0.5;
+    
+    const supportMap = {
+      extensive: ['extensive', 'good'],
+      professional: ['extensive', 'good'],
+      documentation: ['high', 'excellent'],
+      minimal: ['good', 'high'],
+    };
+    
+    const preferences = Array.isArray(preference) ? preference : [preference];
+    let totalScore = 0;
+    
+    for (const pref of preferences) {
+      if (pref === 'no_preference') continue;
+      const acceptableSupport = supportMap[pref] || [];
+      let score = 0;
+      if (acceptableSupport.includes(distro.community_support)) score += 0.5;
+      if (distro.professional_support && pref === 'professional') score += 0.3;
+      if (acceptableSupport.includes(distro.documentation_quality)) score += 0.3;
+      totalScore += Math.min(score, 1);
+    }
+    
+    return Math.min(1, totalScore / preferences.length);
+  }
+
+  function scorePhilosophy(distro, preference) {
+    if (!preference || preference === 'no_preference') return 0.5;
+    const philosophyMap = {
+      free_software: ['user_freedom', 'pragmatic'],
+      privacy: ['user_freedom', 'pragmatic'],
+      freedom: ['user_freedom'],
+      corporate: ['pragmatic'],
+    };
+    const acceptablePhilosophies = philosophyMap[preference] || [];
+    const exactMatch = distro.philosophy === preference;
+    const acceptableMatch = acceptablePhilosophies.includes(distro.philosophy);
+    if (exactMatch) return 1;
+    if (acceptableMatch) return 0.7;
+    return 0.3;
+  }
+
+  function calculateScores(preferences) {
+    return distros.map(distro => {
+      let totalScore = 0;
+      totalScore += scoreExperienceLevel(distro, preferences.experienceLevel) * WEIGHTS.experienceLevel;
+      totalScore += scoreUseCase(distro, preferences.useCase) * WEIGHTS.useCase;
+      totalScore += scoreHardware(distro, preferences.hardware) * WEIGHTS.hardware;
+      totalScore += scoreDesktopEnvironment(distro, preferences.desktopEnvironment) * WEIGHTS.desktopEnvironment;
+      totalScore += scoreReleaseModel(distro, preferences.releaseModel) * WEIGHTS.releaseModel;
+      totalScore += scorePackageManager(distro, preferences.packageManager) * WEIGHTS.packageManager;
+      totalScore += scoreSupportLevel(distro, preferences.supportLevel) * WEIGHTS.supportLevel;
+      totalScore += scorePhilosophy(distro, preferences.philosophy) * WEIGHTS.philosophy;
+      return { ...distro, score: Math.round(totalScore * 100) };
+    });
+  }
+
+  function getRecommendations(preferences, limit = 5) {
+    const scoredDistros = calculateScores(preferences);
+    const filtered = scoredDistros.filter(d => d.score >= 30);
+    const sorted = filtered.sort((a, b) => b.score - a.score);
+    return sorted.slice(0, limit);
+  }
+
+  function generateSummary(distro, preferences) {
+    const parts = [];
+    
+    // Experience level match
+    if (preferences.experienceLevel && distro.experience_level.includes(preferences.experienceLevel)) {
+      const expText = {
+        beginner: 'perfect for beginners',
+        intermediate: 'great for intermediate users',
+        advanced: 'ideal for advanced users',
+        expert: 'built for experts'
+      };
+      parts.push(expText[preferences.experienceLevel] || 'suits your experience level');
+    }
+    
+    // Use case match
+    if (preferences.useCase) {
+      const useCases = Array.isArray(preferences.useCase) ? preferences.useCase : [preferences.useCase];
+      const matchedUseCases = useCases.filter(uc => distro.use_cases.includes(uc));
+      if (matchedUseCases.length > 0) {
+        const ucText = {
+          general_desktop: 'daily desktop use',
+          development: 'development work',
+          server: 'server deployment',
+          security: 'security tasks',
+          gaming: 'gaming',
+          content_creation: 'content creation',
+          old_hardware: 'older hardware',
+          privacy: 'privacy-focused computing'
+        };
+        const matchedText = matchedUseCases.map(uc => ucText[uc] || uc).join(' and ');
+        parts.push(`optimized for ${matchedText}`);
+      }
+    }
+    
+    // Hardware match
+    if (preferences.hardware.ram && distro.min_ram_gb <= 4) {
+      parts.push('lightweight on system resources');
+    }
+    
+    // Desktop environment
+    if (preferences.desktopEnvironment && preferences.desktopEnvironment !== 'no_preference') {
+      const des = Array.isArray(preferences.desktopEnvironment) ? preferences.desktopEnvironment : [preferences.desktopEnvironment];
+      const matchedDE = des.filter(de => 
+        distro.desktop_environments.some(dde => 
+          dde.toLowerCase().includes(de.toLowerCase()) || de.toLowerCase().includes(dde.toLowerCase())
+        )
+      );
+      if (matchedDE.length > 0 && distro.desktop_environments[0] !== 'Any') {
+        parts.push(`features your preferred ${distro.desktop_environments.join('/')} desktop`);
+      }
+    }
+    
+    // Philosophy
+    if (preferences.philosophy && preferences.philosophy !== 'no_preference') {
+      if (preferences.philosophy === 'free_software' && distro.philosophy === 'user_freedom') {
+        parts.push('committed to free software principles');
+      } else if (preferences.philosophy === 'privacy' && distro.philosophy === 'user_freedom') {
+        parts.push('privacy-respecting by design');
+      }
+    }
+    
+    // Fallback summary
+    if (parts.length === 0) {
+      parts.push('a solid all-around choice');
+    }
+    
+    return `${distro.name} is ${parts.join(', ')}.`;
+  }
+
+  function getScoreBreakdown(distro, preferences) {
+    const factors = [];
+    
+    // Experience level (30%)
+    if (preferences.experienceLevel && preferences.experienceLevel !== 'not_sure') {
+      const expScore = scoreExperienceLevel(distro, preferences.experienceLevel);
+      if (expScore >= 0.7) {
+        const userLevel = formatExperienceLevel(preferences.experienceLevel);
+        const distroLevels = distro.experience_level.join(', ');
+        factors.push({ 
+          label: `Your ${userLevel} level matches distro's ${distroLevels} support`,
+          icon: '📊'
+        });
+      }
+    }
+    
+    // Use case (25%)
+    if (preferences.useCase && preferences.useCase !== 'not_sure') {
+      const ucScore = scoreUseCase(distro, preferences.useCase);
+      if (ucScore >= 0.7) {
+        const userCases = formatUseCase(preferences.useCase);
+        factors.push({ 
+          label: `Designed for ${userCases}`,
+          icon: '🎯'
+        });
+      }
+    }
+    
+    // Hardware (20%)
+    if (preferences.hardware.ram || preferences.hardware.cpu || preferences.hardware.disk) {
+      const hwScore = scoreHardware(distro, preferences.hardware);
+      if (hwScore >= 0.7) {
+        const hwParts = [];
+        if (preferences.hardware.ram && preferences.hardware.ram !== 'not_sure') {
+          hwParts.push(`RAM: ${formatRam(preferences.hardware.ram)}`);
+        }
+        if (preferences.hardware.cpu && preferences.hardware.cpu !== 'not_sure') {
+          hwParts.push(`CPU: ${formatCpu(preferences.hardware.cpu)}`);
+        }
+        if (preferences.hardware.disk && preferences.hardware.disk !== 'not_sure') {
+          hwParts.push(`Disk: ${formatDisk(preferences.hardware.disk)}`);
+        }
+        if (hwParts.length > 0) {
+          factors.push({ 
+            label: `Compatible with your hardware (${hwParts.join(', ')})`,
+            icon: '💻'
+          });
+        }
+      }
+    }
+    
+    // Desktop environment (10%)
+    if (preferences.desktopEnvironment && preferences.desktopEnvironment !== 'no_preference') {
+      const deScore = scoreDesktopEnvironment(distro, preferences.desktopEnvironment);
+      if (deScore >= 0.7) {
+        const userDE = formatDesktopEnvironment(preferences.desktopEnvironment);
+        const distroDE = distro.desktop_environments.join(', ');
+        factors.push({ 
+          label: `Offers your preferred ${userDE} (available: ${distroDE})`,
+          icon: '🖥️'
+        });
+      }
+    }
+    
+    // Release model (5%)
+    if (preferences.releaseModel && preferences.releaseModel !== 'no_preference') {
+      const rmScore = scoreReleaseModel(distro, preferences.releaseModel);
+      if (rmScore >= 0.7) {
+        const userRM = formatReleaseModel(preferences.releaseModel);
+        factors.push({ 
+          label: `Uses your preferred ${userRM} release model`,
+          icon: '🔄'
+        });
+      }
+    }
+    
+    // Package manager (5%)
+    if (preferences.packageManager && preferences.packageManager !== 'no_preference') {
+      const pmScore = scorePackageManager(distro, preferences.packageManager);
+      if (pmScore >= 0.7) {
+        const userPM = formatPackageManager(preferences.packageManager);
+        factors.push({ 
+          label: `Uses your preferred ${userPM}`,
+          icon: '📦'
+        });
+      }
+    }
+    
+    // Support level (3%)
+    if (preferences.supportLevel && preferences.supportLevel !== 'no_preference') {
+      const slScore = scoreSupportLevel(distro, preferences.supportLevel);
+      if (slScore >= 0.7) {
+        factors.push({ 
+          label: `Meets your support requirements (${distro.community_support} community${distro.professional_support ? ', professional support available' : ''})`,
+          icon: '👥'
+        });
+      }
+    }
+    
+    // Philosophy (2%)
+    if (preferences.philosophy && preferences.philosophy !== 'no_preference') {
+      const philScore = scorePhilosophy(distro, preferences.philosophy);
+      if (philScore >= 0.7) {
+        factors.push({ 
+          label: `Aligns with your ${preferences.philosophy.replace('_', ' ')} philosophy`,
+          icon: '🎭'
+        });
+      }
+    }
+    
+    return factors;
+  }
+
+  function formatExperienceLevel(value) {
+    const map = {
+      beginner: 'Beginner',
+      intermediate: 'Intermediate',
+      advanced: 'Advanced',
+      expert: 'Expert',
+      not_sure: 'Not Sure'
+    };
+    return map[value] || value;
+  }
+
+  function formatUseCase(value) {
+    const map = {
+      general_desktop: 'General Desktop',
+      development: 'Development',
+      server: 'Server',
+      security: 'Security',
+      gaming: 'Gaming',
+      content_creation: 'Content Creation',
+      old_hardware: 'Old Hardware',
+      privacy: 'Privacy',
+      not_sure: 'Not Sure'
+    };
+    if (Array.isArray(value)) {
+      return value.map(v => map[v] || v).join(', ');
+    }
+    return map[value] || value;
+  }
+
+  function formatRam(value) {
+    const map = {
+      lt_2gb: 'Less than 2GB',
+      '2_4gb': '2GB - 4GB',
+      '4_8gb': '4GB - 8GB',
+      '8_16gb': '8GB - 16GB',
+      gt_16gb: '16GB or more',
+      not_sure: 'Not Sure'
+    };
+    return map[value] || value;
+  }
+
+  function formatCpu(value) {
+    const map = {
+      x86_64: '64-bit Intel/AMD',
+      i386: '32-bit (older systems)',
+      arm64: 'ARM (Raspberry Pi, ARM devices)',
+      not_sure: 'Not Sure'
+    };
+    return map[value] || value;
+  }
+
+  function formatDisk(value) {
+    const map = {
+      lt_20gb: 'Less than 20GB',
+      '20_50gb': '20GB - 50GB',
+      '50_100gb': '50GB - 100GB',
+      gt_100gb: '100GB or more',
+      not_sure: 'Not Sure'
+    };
+    return map[value] || value;
+  }
+
+  function formatDesktopEnvironment(value) {
+    const map = {
+      no_preference: 'No Preference',
+      gnome: 'GNOME',
+      kde: 'KDE Plasma',
+      xfce: 'XFCE',
+      mate: 'MATE',
+      cinnamon: 'Cinnamon',
+      pantheon: 'Pantheon',
+      i3: 'i3/Sway',
+      lxqt: 'LXQt/LXDE'
+    };
+    if (Array.isArray(value)) {
+      return value.map(v => map[v] || v).join(', ');
+    }
+    return map[value] || value;
+  }
+
+  function formatReleaseModel(value) {
+    const map = {
+      no_preference: 'No Preference',
+      stable_lts: 'Stable/LTS',
+      semi_rolling: 'Semi-Rolling',
+      rolling: 'Rolling Release',
+      fixed_release: 'Fixed Release'
+    };
+    return map[value] || value;
+  }
+
+  function formatPackageManager(value) {
+    const map = {
+      no_preference: 'No Preference',
+      apt: 'APT (Debian/Ubuntu)',
+      dnf: 'DNF (Fedora/RHEL)',
+      pacman: 'Pacman (Arch)',
+      portage: 'Portage (Gentoo)',
+    };
+    return map[value] || value;
+  }
+
+  function formatHardwareType(value) {
+    const map = {
+      desktop: 'Desktop PC',
+      laptop: 'Laptop',
+      server: 'Server',
+      raspberry_pi: 'Raspberry Pi / ARM',
+      virtual_machine: 'Virtual Machine / Cloud',
+      not_sure: 'Not Sure'
+    };
+    return map[value] || value;
+  }
+
+  function formatPrivacyLevel(value) {
+    const map = {
+      casual: 'Casual',
+      enhanced: 'Enhanced',
+      high: 'High',
+      extreme: 'Extreme',
+      not_sure: 'Not Sure'
+    };
+    return map[value] || value;
+  }
+
+  function formatLearningGoal(value) {
+    const map = {
+      productivity: 'Productivity',
+      balance: 'Balance',
+      learning: 'Learning',
+      not_sure: 'Not Sure'
+    };
+    return map[value] || value;
+  }
+
+  function formatPhilosophy(value) {
+    const map = {
+      no_preference: 'No Preference',
+      free_software: '100% Free Software',
+      freedom: 'User Freedom',
+      corporate: 'Corporate-Backed'
+    };
+    return map[value] || value;
+  }
+
+  function getCurrentQuestion() {
+    return questions[wizardState.currentStep];
+  }
+
+  function canSkipStep() {
+    const currentQ = getCurrentQuestion();
+    return !currentQ.required;
+  }
+
+  function canProceed() {
+    const currentQ = getCurrentQuestion();
+    if (currentQ.multiSelect) {
+      return !currentQ.required || selectedOptions.length > 0;
+    } else {
+      return selectedOption !== '';
+    }
+  }
+
+  function getProgress() {
+    const totalSteps = questions.length;
+    const completedSteps = questions.filter((q, i) => {
+      if (q.subStep) {
+        return wizardState.preferences.hardware[q.id] !== null;
+      }
+      return wizardState.preferences[q.id] !== null;
+    }).length;
+    const progressStep = showResults ? totalSteps : wizardState.currentStep + 1;
+    return {
+      current: progressStep,
+      total: totalSteps,
+      completed: completedSteps,
+    };
+  }
+
+  function setPreference(key, value) {
+    if (key === 'ram' || key === 'cpu' || key === 'disk') {
+      wizardState.preferences.hardware[key] = value;
+    } else {
+      wizardState.preferences[key] = value;
+    }
+  }
+
+  function getPreference(key) {
+    if (key === 'ram' || key === 'cpu' || key === 'disk') {
+      return wizardState.preferences.hardware[key];
+    }
+    return wizardState.preferences[key];
+  }
+
+  function handleSelect(value) {
+    const currentQ = getCurrentQuestion();
+    
+    if (currentQ.multiSelect) {
+      // Multi-select logic - don't store preference yet, wait for Next
+      if (selectedOptions.includes(value)) {
+        selectedOptions = selectedOptions.filter(v => v !== value);
+      } else {
+        selectedOptions = [...selectedOptions, value];
+      }
+    } else {
+      // Single-select logic
+      selectedOption = value;
+      if (currentQ.subStep) {
+        setPreference(currentQ.id, value);
+      } else {
+        setPreference(currentQ.id, value);
+      }
+    }
+    render(true); // Pass true to indicate this is a selection update, not step change
+  }
+
+  function handleNext() {
+    const currentQ = getCurrentQuestion();
+    
+    if (currentQ.multiSelect) {
+      // For multi-select, require at least one selection if required
+      if (currentQ.required && selectedOptions.length === 0) {
+        return;
+      }
+    } else {
+      // For single-select, require selection or allow skip
+      if (!selectedOption && !canSkipStep()) {
+        return;
+      }
+    }
+    
+    if (currentQ.subStep) {
+      setPreference(currentQ.id, selectedOption || null);
+    } else {
+      setPreference(currentQ.id, currentQ.multiSelect ? selectedOptions : selectedOption || null);
+    }
+    
+    previousStep = wizardState.currentStep;
+    
+    if (wizardState.currentStep < questions.length - 1) {
+      wizardState.currentStep++;
+      selectedOption = getPreference(getCurrentQuestion().id) || '';
+      selectedOptions = Array.isArray(getPreference(getCurrentQuestion().id)) ? getPreference(getCurrentQuestion().id) : [];
+    } else {
+      recommendations = getRecommendations(wizardState.preferences);
+      showResults = true;
+    }
+    render();
+  }
+
+  function handleBack() {
+    if (wizardState.currentStep > 0) {
+      previousStep = wizardState.currentStep;
+      wizardState.currentStep--;
+      selectedOption = getPreference(getCurrentQuestion().id) || '';
+      selectedOptions = Array.isArray(getPreference(getCurrentQuestion().id)) ? getPreference(getCurrentQuestion().id) : [];
+      render();
+    }
+  }
+
+  function handleSkip() {
+    if (canSkipStep()) {
+      handleNext();
+    }
+  }
+
+  function handleStart() {
+    hasStarted = true;
+    render();
+  }
+
+  function handleReset() {
+    wizardState.currentStep = 0;
+    wizardState.preferences = {
+      experienceLevel: null,
+      useCase: null,
+      hardware: { ram: null, cpu: null, disk: null },
+      desktopEnvironment: null,
+      releaseModel: null,
+      packageManager: null,
+      supportLevel: null,
+      philosophy: null,
+    };
+    showResults = false;
+    recommendations = [];
+    selectedOption = '';
+    hasStarted = false;
+    render();
+  }
+
+  function render(isSelectionUpdate = false) {
+    const app = document.getElementById('app');
+    const progress = getProgress();
+    const currentQ = getCurrentQuestion();
+    
+    // Reset selections when question changes (only on navigation, not during re-render)
+    if (currentQ && currentQ.id !== currentQuestionId && !showResults) {
+      currentQuestionId = currentQ.id;
+      // Only reset if navigating from a different step (not first load)
+      if (previousStep !== -1) {
+        if (currentQ.multiSelect) {
+          const pref = getPreference(currentQ.id);
+          selectedOptions = Array.isArray(pref) ? [...pref] : [];
+        } else {
+          selectedOptions = [];
+          selectedOption = getPreference(currentQ.id) || '';
+        }
+      }
+    }
+    
+    // Determine slide transition direction (skip for selection updates)
+    let slideClass = '';
+    if (!isSelectionUpdate && !showResults) {
+      slideClass = 'animate-fade-in';
+      if (previousStep !== -1) {
+        if (wizardState.currentStep > previousStep) {
+          slideClass = 'animate-slide-in-left';
+        } else if (wizardState.currentStep < previousStep) {
+          slideClass = 'animate-slide-in-right';
+        }
+      }
+    }
+    
+    // Show landing page if user hasn't started yet
+    if (!hasStarted && !showResults) {
+      app.innerHTML = `
+        <div class="content-frame-wide">
+        <section class="grid items-center gap-10 py-10 lg:grid-cols-[1.08fr_0.92fr] lg:py-16">
+          <div class="animate-fade-in">
+            <div class="eyebrow mb-6">
+              <span>✨</span>
+              <span>Fun, private distro matching</span>
+            </div>
+            <h1 class="mb-6 text-5xl font-black tracking-tight text-gradient sm:text-6xl lg:text-7xl">
+              Find a Linux distro that actually fits you.
+            </h1>
+            <p class="mb-8 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
+              Turn confusing Linux choices into a playful guided journey. Pick your vibe, hardware, desktop style, and priorities — then get clear recommendations in minutes.
+            </p>
+            <div class="flex flex-col gap-4 sm:flex-row">
+              <button type="button" class="btn-primary text-base sm:text-lg animate-scale-in stagger-1" data-action="start">
+                Start the quest
+                <svg class="ml-2 inline-block h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
+              </button>
+              <a href="/about" class="btn-secondary text-base sm:text-lg animate-scale-in stagger-2">
+                See how it works
+              </a>
+            </div>
+            <div class="mt-8 flex flex-wrap gap-3 text-sm font-semibold text-slate-400">
+              <span class="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2">No account</span>
+              <span class="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2">Runs locally</span>
+              <span class="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2">50+ distros</span>
+            </div>
+          </div>
+
+          <div class="relative animate-scale-in stagger-2">
+            <div class="absolute -inset-6 rounded-[2.5rem] bg-gradient-to-br from-violet-500/20 via-cyan-500/10 to-emerald-500/10 blur-3xl"></div>
+            <div class="card">
+              <div class="mb-6 flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-bold uppercase tracking-[0.24em] text-cyan-200/80">DistroMatch</p>
+                  <h2 class="mt-2 text-2xl font-black text-white">Your Linux vibe</h2>
+                </div>
+                <div class="rounded-2xl border border-white/10 bg-white/[0.06] p-3 text-3xl animate-float">🐧</div>
+              </div>
+              <div class="space-y-4">
+                <div class="rounded-3xl border border-violet-300/20 bg-violet-400/10 p-5">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-violet-100">Beginner friendly</span>
+                    <span class="text-2xl">🌱</span>
+                  </div>
+                  <div class="mt-4 h-2 rounded-full bg-white/10">
+                    <div class="h-2 w-4/5 rounded-full bg-gradient-to-r from-violet-400 to-cyan-300"></div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="rounded-3xl border border-white/10 bg-white/[0.045] p-5">
+                    <div class="text-2xl">🎮</div>
+                    <p class="mt-3 text-sm font-bold text-slate-200">Gaming ready</p>
+                  </div>
+                  <div class="rounded-3xl border border-white/10 bg-white/[0.045] p-5">
+                    <div class="text-2xl">🛡️</div>
+                    <p class="mt-3 text-sm font-bold text-slate-200">Privacy aware</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid grid-cols-1 gap-6 pb-12 md:grid-cols-3">
+          <div class="glass-effect feature-card animate-slide-in stagger-3">
+            <div class="option-icon mb-5">🎯</div>
+            <h3 class="mb-2 text-xl font-black text-white">Personalized</h3>
+            <p class="text-sm leading-6 text-slate-400">Your hardware, goals, desktop taste, and support needs shape every recommendation.</p>
+          </div>
+          <div class="glass-effect feature-card animate-slide-in stagger-4">
+            <div class="option-icon mb-5">🧭</div>
+            <h3 class="mb-2 text-xl font-black text-white">Guided journey</h3>
+            <p class="text-sm leading-6 text-slate-400">A friendly wizard turns distro research into clear, bite-sized choices.</p>
+          </div>
+          <div class="glass-effect feature-card animate-slide-in stagger-5">
+            <div class="option-icon mb-5">🔒</div>
+            <h3 class="mb-2 text-xl font-black text-white">Privacy first</h3>
+            <p class="text-sm leading-6 text-slate-400">Everything runs in your browser. No accounts, no tracking, no server-side profiling.</p>
+          </div>
+        </section>
+        </div>
+      `;
+      
+      app.querySelector('[data-action="start"]').addEventListener('click', handleStart);
+      return;
+    }
+    
+    if (!showResults) {
+      const currentQ = getCurrentQuestion();
+      
+      let html = `
+        <div class="content-frame-narrow">
+        <!-- Progress bar - always visible -->
+        <div class="mb-8">
+          <div class="mb-3 flex items-center justify-between">
+            <span class="text-sm font-bold text-slate-300">Step ${progress.current} of ${progress.total}</span>
+            <span class="text-sm font-semibold text-slate-500">${Math.round(progress.current / progress.total * 100)}% complete</span>
+          </div>
+          <div class="h-3 w-full overflow-hidden rounded-full border border-white/10 bg-white/[0.05] p-0.5">
+            <div class="h-2 rounded-full bg-gradient-to-r from-violet-500 via-indigo-500 to-cyan-400 transition-all duration-500" style="width: ${progress.current / progress.total * 100}%"></div>
+          </div>
+        </div>
+
+        <div class="card ${slideClass}">
+          <div class="mb-8 flex flex-col gap-3">
+            <div class="eyebrow w-fit">
+              <span>${currentQ.multiSelect ? '☑️' : '✨'}</span>
+              <span>${currentQ.multiSelect ? 'Choose one or more (Press 1-9 to select)' : 'Pick your best match (Press 1-9 to select)'}</span>
+            </div>
+            <h2 class="text-3xl font-black tracking-tight text-gradient">${currentQ.question}</h2>
+          </div>
+
+          <div class="space-y-3">
+      `;
+      
+      currentQ.options.forEach((option, index) => {
+        const isSelected = currentQ.multiSelect 
+          ? selectedOptions.includes(option.value) 
+          : selectedOption === option.value;
+        const shortcutKey = index + 1;
+        
+        html += `
+          <button type="button" class="option-option w-full flex items-center gap-4 rounded-2xl border ${isSelected ? (currentQ.multiSelect ? 'border-emerald-400/55 bg-emerald-500/10' : 'border-violet-400/55 bg-violet-500/10') : 'border-white/12 bg-white/[0.04]'} p-4 text-left transition-all duration-200 hover:border-white/20 hover:bg-white/[0.08] ${isSelectionUpdate ? '' : 'animate-slide-in'}"
+                  data-value="${option.value}" ${isSelectionUpdate ? '' : `style="animation-delay: ${index * 0.03}s"`}>
+            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-white/[0.04] text-xs font-medium ${isSelected ? 'text-emerald-300' : 'text-slate-500'}">
+              ${shortcutKey}
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">${option.icon}</span>
+              <span class="font-semibold ${isSelected ? 'text-white' : 'text-slate-200'}">${option.label}</span>
+            </div>
+            ${isSelected ? '<svg class="ml-auto h-5 w-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' : ''}
+          </button>
+        `;
+      });
+      
+      html += `
+          </div>
+
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            ${wizardState.currentStep > 0 ? '<button type="button" class="btn-tertiary" data-action="back">← Back (←)</button>' : '<div></div>'}
+            ${!currentQ.required ? '<button type="button" class="btn-secondary" data-action="skip">Skip (S)</button>' : ''}
+            <button type="button" class="btn-primary ${currentQ.multiSelect && currentQ.required && selectedOptions.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}" data-action="next" ${currentQ.multiSelect && currentQ.required && selectedOptions.length === 0 ? 'disabled' : ''}>
+              ${wizardState.currentStep === questions.length - 1 ? 'See Results → (Enter)' : 'Next → (Enter)'}
+            </button>
+          </div>
+        </div>
+        </div>
+      `;
+      
+      if (currentQ.id === 'ram' && selectedOption === 'lt_2gb') {
+        html += `
+          <div class="content-frame-narrow mt-4 p-5 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-2xl animate-fade-in">
+            <p class="text-sm text-amber-200 font-medium">💡 Tip: Less than 2GB RAM is very limited. Consider a lightweight distro like Lubuntu or Puppy Linux.</p>
+          </div>
+        `;
+      }
+      
+      app.innerHTML = html;
+      
+      // Remove previous keyboard listener
+      if (window.currentKeyboardHandler) {
+        document.removeEventListener('keydown', window.currentKeyboardHandler);
+      }
+      
+      // Add event listeners
+      app.querySelectorAll('[data-value]').forEach(btn => {
+        btn.addEventListener('click', () => handleSelect(btn.dataset.value));
+      });
+      app.querySelectorAll('[data-action="back"]').forEach(btn => {
+        btn.addEventListener('click', handleBack);
+      });
+      app.querySelectorAll('[data-action="next"]').forEach(btn => {
+        btn.addEventListener('click', handleNext);
+      });
+      app.querySelectorAll('[data-action="skip"]').forEach(btn => {
+        btn.addEventListener('click', handleSkip);
+      });
+      
+      // Keyboard shortcuts
+      const handleKeyboard = (e) => {
+        const currentQ = getCurrentQuestion();
+        
+        // Number keys 1-9 to select options
+        if (e.key >= '1' && e.key <= '9') {
+          const index = parseInt(e.key) - 1;
+          if (index < currentQ.options.length) {
+            e.preventDefault();
+            handleSelect(currentQ.options[index].value);
+          }
+        }
+        
+        // Enter to proceed
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (canProceed()) {
+            handleNext();
+          }
+        }
+        
+        // Back arrow to go back
+        if (e.key === 'ArrowLeft' && wizardState.currentStep > 0) {
+          e.preventDefault();
+          handleBack();
+        }
+        
+        // S to skip
+        if ((e.key === 's' || e.key === 'S') && !currentQ.required) {
+          e.preventDefault();
+          handleSkip();
+        }
+      };
+      
+      document.addEventListener('keydown', handleKeyboard);
+      
+      // Cleanup keyboard listener on re-render
+      window.currentKeyboardHandler = handleKeyboard;
+    } else {
+      let html = `
+        <div class="content-frame-narrow">
+        <div class="text-center mb-10 animate-fade-in">
+          <div class="mb-4 inline-block rounded-full border border-white/10 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 p-6 animate-pulse-glow">
+            <svg class="w-16 h-16 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h1 class="mb-3 text-5xl font-black tracking-tight text-white">Your Perfect Match! 🎉</h1>
+          <p class="mx-auto max-w-2xl text-xl leading-8 text-slate-300">Based on your preferences, here are your top recommendations:</p>
+        </div>
+
+        <div class="card mb-8 animate-scale-in">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="option-icon !h-8 !w-8 !text-lg">📋</div>
+            <h3 class="text-base font-black text-white">Your Preferences</h3>
+          </div>
+
+          <div class="flex flex-wrap gap-1.5 text-xs">
+            ${wizardState.preferences.experienceLevel ? `<span class="inline-flex items-center rounded-full border border-violet-500/30 bg-violet-500/10 px-2 py-1 text-violet-200"><span class="mr-1.5">🌱</span>${formatExperienceLevel(wizardState.preferences.experienceLevel)}</span>` : ''}
+            ${wizardState.preferences.useCase ? `<span class="inline-flex items-center rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2 py-1 text-cyan-200"><span class="mr-1.5">🎯</span>${formatUseCase(wizardState.preferences.useCase)}</span>` : ''}
+            ${wizardState.preferences.hardware.ram ? `<span class="inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 text-emerald-200"><span class="mr-1.5">📊</span>${formatRam(wizardState.preferences.hardware.ram)}</span>` : ''}
+            ${wizardState.preferences.hardware.disk ? `<span class="inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-amber-200"><span class="mr-1.5">💾</span>${formatDisk(wizardState.preferences.hardware.disk)}</span>` : ''}
+            ${wizardState.preferences.hardware.type ? `<span class="inline-flex items-center rounded-full border border-rose-500/30 bg-rose-500/10 px-2 py-1 text-rose-200"><span class="mr-1.5">🖥️</span>${formatHardwareType(wizardState.preferences.hardware.type)}</span>` : ''}
+            ${wizardState.preferences.desktopEnvironment ? `<span class="inline-flex items-center rounded-full border border-blue-500/30 bg-blue-500/10 px-2 py-1 text-blue-200"><span class="mr-1.5">🖼️</span>${formatDesktopEnvironment(wizardState.preferences.desktopEnvironment)}</span>` : ''}
+            ${wizardState.preferences.releaseModel ? `<span class="inline-flex items-center rounded-full border border-purple-500/30 bg-purple-500/10 px-2 py-1 text-purple-200"><span class="mr-1.5">🔄</span>${formatReleaseModel(wizardState.preferences.releaseModel)}</span>` : ''}
+            ${wizardState.preferences.packageManager ? `<span class="inline-flex items-center rounded-full border border-teal-500/30 bg-teal-500/10 px-2 py-1 text-teal-200"><span class="mr-1.5">📦</span>${formatPackageManager(wizardState.preferences.packageManager)}</span>` : ''}
+            ${wizardState.preferences.privacyLevel ? `<span class="inline-flex items-center rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2 py-1 text-indigo-200"><span class="mr-1.5">🔒</span>${formatPrivacyLevel(wizardState.preferences.privacyLevel)}</span>` : ''}
+            ${wizardState.preferences.learningGoal ? `<span class="inline-flex items-center rounded-full border border-orange-500/30 bg-orange-500/10 px-2 py-1 text-orange-200"><span class="mr-1.5">📚</span>${formatLearningGoal(wizardState.preferences.learningGoal)}</span>` : ''}
+            ${wizardState.preferences.philosophy ? `<span class="inline-flex items-center rounded-full border border-pink-500/30 bg-pink-500/10 px-2 py-1 text-pink-200"><span class="mr-1.5">🦅</span>${formatPhilosophy(wizardState.preferences.philosophy)}</span>` : ''}
+          </div>
+        </div>
+
+        <div class="space-y-6 mb-8">
+      `;
+
+      recommendations.forEach((distro, index) => {
+        const scoreColor = distro.score >= 80 ? 'from-emerald-500 to-teal-600' : distro.score >= 60 ? 'from-violet-500 to-indigo-600' : 'from-amber-500 to-orange-600';
+        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+        const summary = generateSummary(distro, wizardState.preferences);
+        const scoreBreakdown = getScoreBreakdown(distro, wizardState.preferences);
+        html += `
+          <div class="card animate-slide-in group transition-transform duration-300 hover:scale-[1.01]" style="animation-delay: ${index * 0.1}s">
+            <div class="mb-5 flex items-start justify-between">
+              <div class="flex items-center gap-3">
+                ${medal ? `<span class="text-4xl animate-scale-in">${medal}</span>` : ''}
+                <div>
+                  <h3 class="text-2xl font-black text-white transition-transform group-hover:scale-105">${distro.name} ${distro.version}</h3>
+                  <div class="mt-2 flex items-center gap-2 flex-wrap">
+                    <span class="inline-flex items-center rounded-full bg-gradient-to-r ${scoreColor} px-4 py-1.5 text-sm font-black text-white shadow-lg animate-pulse-glow">
+                      ${distro.score}% Match
+                    </span>
+                    ${distro.based_on && distro.based_on !== 'independent' ? `<span class="inline-flex items-center rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-xs font-semibold text-slate-300">Based on ${distro.based_on.charAt(0).toUpperCase() + distro.based_on.slice(1)}</span>` : ''}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="mb-4 leading-7 text-slate-300 text-sm italic">"${summary}"</p>
+            <p class="mb-4 leading-7 text-slate-300">${distro.description}</p>
+
+            <div class="mb-5 flex flex-wrap gap-1.5 text-xs">
+              <span class="inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 text-emerald-200">
+                ${distro.cpu_architecture.join(', ')}
+              </span>
+              <span class="inline-flex items-center rounded-full border border-blue-500/30 bg-blue-500/10 px-2 py-1 text-blue-200">
+                ${distro.package_manager}
+              </span>
+              <span class="inline-flex items-center rounded-full border border-purple-500/30 bg-purple-500/10 px-2 py-1 text-purple-200">
+                ${distro.philosophy.replace('_', ' ')}
+              </span>
+              <span class="inline-flex items-center rounded-full border border-orange-500/30 bg-orange-500/10 px-2 py-1 text-orange-200">
+                ${distro.desktop_environments.slice(0, 2).join(', ')}${distro.desktop_environments.length > 2 ? '+' : ''}
+              </span>
+            </div>
+
+            ${scoreBreakdown.length > 0 ? `
+            <div class="mb-5 rounded-3xl border border-violet-500/20 bg-violet-500/5 p-5">
+              <h4 class="mb-3 flex items-center gap-2 font-black text-white">
+                <span>🎯</span> Why This Match?
+              </h4>
+              <ul class="space-y-2 text-sm text-slate-300">
+                ${scoreBreakdown.map(factor => `
+                  <li class="flex items-start gap-2">
+                    <span class="mt-0.5">${factor.icon}</span>
+                    <span>${factor.label}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+            ` : ''}
+
+            <div class="mb-5 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+              <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
+                <span class="block text-slate-500 mb-1">Min RAM</span>
+                <span class="font-bold text-slate-100">${distro.min_ram_gb} GB</span>
+              </div>
+              ${distro.recommended_ram_gb ? `
+              <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
+                <span class="block text-slate-500 mb-1">Recommended RAM</span>
+                <span class="font-bold text-slate-100">${distro.recommended_ram_gb} GB</span>
+              </div>
+              ` : ''}
+              <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
+                <span class="block text-slate-500 mb-1">Min Disk</span>
+                <span class="font-bold text-slate-100">${distro.min_disk_gb} GB</span>
+              </div>
+              <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
+                <span class="block text-slate-500 mb-1">Release Model</span>
+                <span class="font-bold text-slate-100">${distro.release_model.replace('_', ' ')}</span>
+              </div>
+            </div>
+
+            <div class="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-5">
+              <h4 class="mb-3 flex items-center gap-2 font-black text-white">
+                <span>✨</span> Key Features
+              </h4>
+              <ul class="list-inside list-disc space-y-1 text-sm text-slate-300">
+                ${distro.strengths.slice(0, 4).map((s, i) => `<li class="animate-slide-in" style="animation-delay: ${i * 0.05}s">${s}</li>`).join('')}
+              </ul>
+            </div>
+
+            ${distro.weaknesses && distro.weaknesses.length > 0 ? `
+            <div class="mb-5 rounded-3xl border border-amber-500/20 bg-amber-500/5 p-5">
+              <h4 class="mb-3 flex items-center gap-2 font-black text-white">
+                <span>⚠️</span> Things to Consider
+              </h4>
+              <ul class="list-inside list-disc space-y-1 text-sm text-slate-300">
+                ${(Array.isArray(distro.weaknesses) ? distro.weaknesses : [distro.weaknesses]).slice(0, 3).map((w, i) => `<li>${w}</li>`).join('')}
+              </ul>
+            </div>
+            ` : ''}
+
+            <div class="flex gap-3">
+              <a href="${distro.download_page}" target="_blank" rel="noopener noreferrer" class="btn-primary flex items-center justify-center gap-2 text-xs flex-1">
+                Download
+                <svg width="16" height="16" class="flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+              </a>
+              <a href="${distro.official_website}" target="_blank" rel="noopener noreferrer" class="btn-secondary flex items-center justify-center gap-2 text-xs flex-1">
+                Learn More
+                <svg width="16" height="16" class="flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+        </div>
+
+        <div class="flex justify-center gap-4">
+          <button type="button" class="btn-tertiary" data-action="reset">Start Over</button>
+        </div>
+        </div>
+      `;
+      
+      app.innerHTML = html;
+      
+      app.querySelectorAll('[data-action="reset"]').forEach(btn => {
+        btn.addEventListener('click', handleReset);
+      });
+      
+      // Attach event listeners
+      if (!showResults) {
+        app.querySelectorAll('[data-action="start"]').forEach(btn => {
+          btn.addEventListener('click', handleStart);
+        });
+        app.querySelectorAll('[data-action="next"]').forEach(btn => {
+          btn.addEventListener('click', handleNext);
+        });
+        app.querySelectorAll('[data-action="back"]').forEach(btn => {
+          btn.addEventListener('click', handleBack);
+        });
+        app.querySelectorAll('[data-action="skip"]').forEach(btn => {
+          btn.addEventListener('click', handleSkip);
+        });
+      }
+    }
+  }
+
+  // Initial render
+  render();
+</script>

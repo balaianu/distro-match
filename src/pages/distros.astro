@@ -1,0 +1,309 @@
+---
+import Layout from '../layouts/Layout.astro';
+import distros from '../data/distros.json';
+
+const allDistros = distros;
+
+// Extract unique values for filters
+const families = [...new Set(allDistros.map(d => d.based_on || 'independent'))].sort();
+const releaseModels = [...new Set(allDistros.map(d => d.release_model))].sort();
+const desktopEnvs = [...new Set(allDistros.flatMap(d => d.desktop_environments))].sort();
+const useCases = [...new Set(allDistros.flatMap(d => d.use_cases))].sort();
+const philosophies = [...new Set(allDistros.map(d => d.philosophy))].sort();
+---
+
+<Layout title="Explore Distros" description="Browse all 60+ Linux distributions. Filter by family, release model, desktop environment, use case, and philosophy to find the perfect distro for you.">
+  <div class="min-h-screen bg-gradient-to-b from-[#070711] to-[#0a0a16]">
+    <!-- Hero Section -->
+    <div class="relative overflow-hidden py-20 sm:py-32">
+      <div class="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-transparent to-cyan-500/5"></div>
+      <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h1 class="text-5xl font-black tracking-tight text-gradient sm:text-6xl lg:text-7xl">
+            Explore Distros
+          </h1>
+          <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-300">
+            Browse all 60+ Linux distributions. Filter by category to find the perfect match.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-8">
+      <div class="card p-6">
+        <div class="mb-4 flex items-center justify-between">
+          <h2 class="text-lg font-black text-gradient">Filters</h2>
+          <button 
+            id="resetFilters"
+            class="text-sm font-bold text-violet-400 hover:text-violet-300 transition-colors"
+          >
+            Reset All
+          </button>
+        </div>
+        
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <!-- Family Filter -->
+          <div>
+            <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-400">Family</label>
+            <select id="filterFamily" class="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-100 focus:border-violet-500 focus:outline-none">
+              <option value="">All Families</option>
+              {families.map(family => (
+                <option value={family}>{family.charAt(0).toUpperCase() + family.slice(1)}</option>
+              ))}
+            </select>
+          </div>
+
+          <!-- Release Model Filter -->
+          <div>
+            <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-400">Release Model</label>
+            <select id="filterReleaseModel" class="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-100 focus:border-violet-500 focus:outline-none">
+              <option value="">All Models</option>
+              {releaseModels.map(model => (
+                <option value={model}>{model.replace('_', ' ').toUpperCase()}</option>
+              ))}
+            </select>
+          </div>
+
+          <!-- Desktop Environment Filter -->
+          <div>
+            <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-400">Desktop</label>
+            <select id="filterDesktopEnv" class="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-100 focus:border-violet-500 focus:outline-none">
+              <option value="">All Desktops</option>
+              {desktopEnvs.map(de => (
+                <option value={de}>{de}</option>
+              ))}
+            </select>
+          </div>
+
+          <!-- Use Case Filter -->
+          <div>
+            <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-400">Use Case</label>
+            <select id="filterUseCase" class="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-100 focus:border-violet-500 focus:outline-none">
+              <option value="">All Use Cases</option>
+              {useCases.map(uc => (
+                <option value={uc}>{uc.replace('_', ' ').toUpperCase()}</option>
+              ))}
+            </select>
+          </div>
+
+          <!-- Philosophy Filter -->
+          <div>
+            <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-400">Philosophy</label>
+            <select id="filterPhilosophy" class="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-100 focus:border-violet-500 focus:outline-none">
+              <option value="">All Philosophies</option>
+              {philosophies.map(phil => (
+                <option value={phil}>{phil.replace('_', ' ').toUpperCase()}</option>
+              ))}
+            </select>
+          </div>
+
+          <!-- Experience Level Filter -->
+          <div>
+            <label class="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-400">Experience</label>
+            <select id="filterExperience" class="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-100 focus:border-violet-500 focus:outline-none">
+              <option value="">All Levels</option>
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+              <option value="expert">Expert</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-4 text-sm text-slate-400">
+          Showing <span id="resultCount" class="font-bold text-slate-100">{allDistros.length}</span> distros
+        </div>
+      </div>
+    </div>
+
+    <!-- Distros Grid -->
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-20">
+      <div id="distrosGrid" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {allDistros.map((distro, index) => (
+          <div 
+            class="card group transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/30"
+            data-family={distro.based_on || 'independent'}
+            data-release-model={distro.release_model}
+            data-desktop-envs={distro.desktop_environments.join(',')}
+            data-use-cases={distro.use_cases.join(',')}
+            data-philosophy={distro.philosophy}
+            data-experience-levels={distro.experience_level.join(',')}
+            style="animation-delay: ${index * 0.05}s"
+          >
+            <div class="mb-4 flex items-start justify-between">
+              <div>
+                <h3 class="text-xl font-black text-white transition-transform group-hover:scale-105">{distro.name} {distro.version}</h3>
+                {distro.based_on && distro.based_on !== 'independent' ? (
+                  <span class="inline-flex items-center rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-xs font-semibold text-slate-300 mt-2">
+                    Based on {distro.based_on.charAt(0).toUpperCase() + distro.based_on.slice(1)}
+                  </span>
+                ) : ''}
+              </div>
+            </div>
+
+            <p class="mb-4 leading-7 text-slate-300 text-sm line-clamp-3">{distro.description}</p>
+
+            <div class="flex flex-wrap gap-1.5 mb-4 text-xs">
+              <span class="inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-1 text-emerald-200">
+                {distro.cpu_architecture.join(', ')}
+              </span>
+              <span class="inline-flex items-center rounded-full border border-blue-500/30 bg-blue-500/10 px-2 py-1 text-blue-200">
+                {distro.package_manager}
+              </span>
+              <span class="inline-flex items-center rounded-full border border-purple-500/30 bg-purple-500/10 px-2 py-1 text-purple-200">
+                {distro.philosophy.replace('_', ' ')}
+              </span>
+              <span class="inline-flex items-center rounded-full border border-orange-500/30 bg-orange-500/10 px-2 py-1 text-orange-200">
+                {distro.desktop_environments.slice(0, 2).join(', ')}{distro.desktop_environments.length > 2 ? '+' : ''}
+              </span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-xs mb-4">
+              <div class="rounded-xl border border-white/10 bg-white/[0.04] p-2.5">
+                <span class="block text-slate-500 mb-1">Min RAM</span>
+                <span class="font-bold text-slate-100">{distro.min_ram_gb} GB</span>
+              </div>
+              <div class="rounded-xl border border-white/10 bg-white/[0.04] p-2.5">
+                <span class="block text-slate-500 mb-1">Min Disk</span>
+                <span class="font-bold text-slate-100">{distro.min_disk_gb} GB</span>
+              </div>
+              {distro.recommended_ram_gb && (
+              <div class="rounded-xl border border-white/10 bg-white/[0.04] p-2.5">
+                <span class="block text-slate-500 mb-1">Rec. RAM</span>
+                <span class="font-bold text-slate-100">{distro.recommended_ram_gb} GB</span>
+              </div>
+              )}
+              <div class="rounded-xl border border-white/10 bg-white/[0.04] p-2.5">
+                <span class="block text-slate-500 mb-1">Release</span>
+                <span class="font-bold text-slate-100">{distro.release_model.replace('_', ' ')}</span>
+              </div>
+            </div>
+
+            <div class="mb-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+              <h4 class="mb-2 flex items-center gap-2 text-xs font-bold text-white">
+                <span>✨</span> Key Features
+              </h4>
+              <ul class="list-inside list-disc space-y-1 text-xs text-slate-300">
+                {distro.strengths.slice(0, 4).map(s => (
+                  <li>{s}</li>
+                ))}
+              </ul>
+            </div>
+
+            {distro.weaknesses && distro.weaknesses.length > 0 ? (
+            <div class="mb-4 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4">
+              <h4 class="mb-2 flex items-center gap-2 text-xs font-bold text-white">
+                <span>⚠️</span> Consider
+              </h4>
+              <ul class="list-inside list-disc space-y-1 text-xs text-slate-300">
+                {(Array.isArray(distro.weaknesses) ? distro.weaknesses : [distro.weaknesses]).slice(0, 3).map(w => (
+                  <li>{w}</li>
+                ))}
+              </ul>
+            </div>
+            ) : ''}
+
+            <div class="flex gap-3">
+              <a 
+                href={distro.download_page} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="btn-primary flex items-center justify-center gap-2 text-xs flex-1"
+              >
+                Download
+                <svg width="16" height="16" class="flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+              </a>
+              <a 
+                href={distro.official_website} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="btn-secondary flex items-center justify-center gap-2 text-xs flex-1"
+              >
+                Learn More
+                <svg width="16" height="16" class="flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div id="noResults" class="hidden text-center py-20">
+        <div class="text-6xl mb-4">🔍</div>
+        <h3 class="text-2xl font-black text-white mb-2">No distros found</h3>
+        <p class="text-slate-400">Try adjusting your filters to see more results.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const distrosGrid = document.getElementById('distrosGrid');
+    const noResults = document.getElementById('noResults');
+    const resultCount = document.getElementById('resultCount');
+    const resetFilters = document.getElementById('resetFilters');
+
+    const filters = {
+      family: document.getElementById('filterFamily'),
+      releaseModel: document.getElementById('filterReleaseModel'),
+      desktopEnv: document.getElementById('filterDesktopEnv'),
+      useCase: document.getElementById('filterUseCase'),
+      philosophy: document.getElementById('filterPhilosophy'),
+      experience: document.getElementById('filterExperience'),
+    };
+
+    function filterDistros() {
+      const cards = distrosGrid.querySelectorAll('.card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const family = card.dataset.family;
+        const releaseModel = card.dataset.releaseModel;
+        const desktopEnvs = card.dataset.desktopEnvs.split(',');
+        const useCases = card.dataset.useCases.split(',');
+        const philosophy = card.dataset.philosophy;
+        const experienceLevels = card.dataset.experienceLevels.split(',');
+
+        let isVisible = true;
+
+        if (filters.family.value && family !== filters.family.value) isVisible = false;
+        if (filters.releaseModel.value && releaseModel !== filters.releaseModel.value) isVisible = false;
+        if (filters.desktopEnv.value && !desktopEnvs.includes(filters.desktopEnv.value)) isVisible = false;
+        if (filters.useCase.value && !useCases.includes(filters.useCase.value)) isVisible = false;
+        if (filters.philosophy.value && philosophy !== filters.philosophy.value) isVisible = false;
+        if (filters.experience.value && !experienceLevels.includes(filters.experience.value)) isVisible = false;
+
+        if (isVisible) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      resultCount.textContent = visibleCount;
+      
+      if (visibleCount === 0) {
+        noResults.classList.remove('hidden');
+        distrosGrid.classList.add('hidden');
+      } else {
+        noResults.classList.add('hidden');
+        distrosGrid.classList.remove('hidden');
+      }
+    }
+
+    function resetAllFilters() {
+      Object.values(filters).forEach(filter => filter.value = '');
+      filterDistros();
+    }
+
+    Object.values(filters).forEach(filter => {
+      filter.addEventListener('change', filterDistros);
+    });
+
+    resetFilters.addEventListener('click', resetAllFilters);
+  </script>
+</Layout>

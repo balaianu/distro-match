@@ -1,0 +1,90 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+  title="About"
+  description="Learn about DistroMatch - a free, open-source Linux distribution selector. Our privacy-friendly wizard helps you find the perfect Linux distro based on your experience, hardware, and preferences."
+>
+  <div class="site-shell">
+    <div class="content-frame-wide">
+    <section class="py-10 lg:py-16">
+      <div class="mx-auto max-w-3xl text-center">
+        <div class="eyebrow mb-6">
+          <span>🐧</span>
+          <span>About DistroMatch</span>
+        </div>
+        <h1 class="text-5xl font-black tracking-tight text-gradient sm:text-6xl">
+          A friendlier way to choose Linux.
+        </h1>
+        <p class="mt-6 text-lg leading-8 text-slate-300">
+          DistroMatch turns the overwhelming world of Linux distributions into a clear, playful, privacy-friendly recommendation flow.
+        </p>
+      </div>
+    </section>
+
+    <section class="grid gap-6 md:grid-cols-2">
+      <div class="card">
+        <div class="option-icon mb-5">✨</div>
+        <h2 class="mb-3 text-2xl font-black text-white">What is this?</h2>
+        <p class="leading-7 text-slate-300">
+          Linux Distro Selector is a free, open-source tool designed to help you find the perfect Linux distribution based on your needs, experience level, and hardware.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="option-icon mb-5">🔒</div>
+        <h2 class="mb-3 text-2xl font-black text-white">Privacy first</h2>
+        <p class="leading-7 text-slate-300">
+          Everything runs entirely in your browser. Your preferences are processed locally, and no personal data is sent to a server.
+        </p>
+      </div>
+    </section>
+
+    <section class="card mt-6">
+      <div class="mb-6 flex items-center gap-4">
+        <div class="option-icon !h-14 !w-14 !text-3xl">🧭</div>
+        <div>
+          <p class="text-sm font-bold uppercase tracking-[0.24em] text-cyan-200/80">How it works</p>
+          <h2 class="text-3xl font-black text-gradient">Smart matching without the research rabbit hole.</h2>
+        </div>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-slate-300"><strong class="text-white">Experience level:</strong> Beginner, intermediate, advanced, or expert.</div>
+        <div class="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-slate-300"><strong class="text-white">Use case:</strong> Desktop, development, gaming, server, privacy, security, or content work.</div>
+        <div class="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-slate-300"><strong class="text-white">Hardware:</strong> RAM, CPU architecture, and disk constraints.</div>
+        <div class="rounded-3xl border border-white/10 bg-white/[0.04] p-5 text-slate-300"><strong class="text-white">Preferences:</strong> Desktop environment, update style, package manager, support, and philosophy.</div>
+      </div>
+    </section>
+
+    <section class="grid gap-6 py-6 md:grid-cols-3">
+      <div class="glass-effect feature-card">
+        <div class="option-icon mb-5">📚</div>
+        <h3 class="mb-2 text-xl font-black text-white">60+ active distros</h3>
+        <p class="text-sm leading-6 text-slate-400">Major, beginner-friendly, immutable, performance, lightweight, security, and enterprise distributions.</p>
+      </div>
+      <div class="glass-effect feature-card">
+        <div class="option-icon mb-5">⚡</div>
+        <h3 class="mb-2 text-xl font-black text-white">Fast static app</h3>
+        <p class="text-sm leading-6 text-slate-400">Built with Astro, Tailwind CSS, and lightweight browser-side JavaScript.</p>
+      </div>
+      <div class="glass-effect feature-card">
+        <div class="option-icon mb-5">🤝</div>
+        <h3 class="mb-2 text-xl font-black text-white">Open source</h3>
+        <p class="text-sm leading-6 text-slate-400">Free to inspect, improve, host, and adapt for the Linux community.</p>
+      </div>
+    </section>
+
+    <section class="card mb-10 text-center">
+      <div class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl border border-white/10 bg-white/[0.06] text-4xl">🚀</div>
+      <h2 class="text-3xl font-black text-gradient">Ready to find your match?</h2>
+      <p class="mx-auto mt-4 max-w-2xl text-slate-300">
+        Start the wizard and answer a few friendly questions to get personalized Linux recommendations.
+      </p>
+      <a href="/" class="btn-primary mt-6">
+        Start the Wizard
+      </a>
+    </section>
+    </div>
+  </div>
+</Layout>
