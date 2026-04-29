@@ -7,7 +7,7 @@ interface Props {
   image?: string;
 }
 
-const { title, description = "Find your perfect Linux distribution with our guided wizard. Answer a few questions about your experience, hardware, and preferences to get personalized recommendations for Ubuntu, Fedora, Arch, Debian, and more.", image = "/og-image.png" } = Astro.props;
+const { title, description = "Find your perfect Linux distribution with our guided wizard. Answer a few questions about your experience, hardware, and preferences to get personalized recommendations for Ubuntu, Fedora, Arch, Debian, and more.", image = "/favicon.svg" } = Astro.props;
 
 const siteUrl = "https://distromatch.com";
 const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
@@ -23,6 +23,7 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
     <meta name="keywords" content="Linux, distro, distribution, Ubuntu, Fedora, Arch, Debian, wizard, selector, recommendation, open source" />
     <meta name="author" content="DistroMatch" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="theme-color" content="#070711" />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -56,22 +57,78 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "DistroMatch",
-        "url": siteUrl,
-        "description": description,
-        "applicationCategory": "UtilitiesApplication",
-        "operatingSystem": "Any",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        "creator": {
-          "@type": "Organization",
-          "name": "DistroMatch",
-          "url": siteUrl
-        }
+        "@graph": [
+          {
+            "@type": "WebApplication",
+            "name": "DistroMatch",
+            "url": siteUrl,
+            "description": description,
+            "applicationCategory": "UtilitiesApplication",
+            "operatingSystem": "Any",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "creator": {
+              "@type": "Organization",
+              "name": "DistroMatch",
+              "url": siteUrl
+            }
+          },
+          {
+            "@type": "Organization",
+            "name": "DistroMatch",
+            "url": siteUrl,
+            "logo": `${siteUrl}/favicon.svg`,
+            "description": "A free, open-source Linux distribution selector that helps users find the perfect Linux distro based on their needs, experience level, and hardware.",
+            "sameAs": [
+              "https://github.com/balaianu/distro-match",
+              "https://buymeacoffee.com/balaianu"
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "contactType": "customer support",
+              "url": "https://github.com/balaianu/distro-match/issues"
+            }
+          },
+          {
+            "@type": "WebSite",
+            "name": "DistroMatch",
+            "url": siteUrl,
+            "description": "Find your perfect Linux distribution with our guided wizard",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": `${siteUrl}/distros?q={search_term_string}`
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": siteUrl
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": title,
+                "item": canonicalUrl
+              }
+            ]
+          },
+          {
+            "@type": "SpeakableSpecification",
+            "cssSelector": ["h1", "h2", "p"],
+            "xpath": ["/html/head/title", "/html/body/h1", "/html/body/h2"]
+          }
+        ]
       }
     </script>
   </head>
