@@ -147,6 +147,8 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
               <span class="text-lg font-black tracking-tight text-gradient sm:text-xl">DistroMatch</span>
             </a>
           </div>
+          
+          <!-- Desktop Navigation -->
           <nav class="hidden items-center rounded-full border border-white/[0.08] bg-white/[0.045] p-1.5 backdrop-blur-2xl md:flex">
             <a href="/" class="rounded-full px-5 py-2.5 text-sm font-bold text-slate-300 transition-all duration-300 hover:bg-white/[0.07] hover:text-white">
               Home
@@ -155,6 +157,32 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
               Explore
             </a>
             <a href="/about" class="rounded-full px-5 py-2.5 text-sm font-bold text-slate-300 transition-all duration-300 hover:bg-white/[0.07] hover:text-white">
+              About
+            </a>
+          </nav>
+
+          <!-- Mobile Menu Button -->
+          <button
+            id="mobile-menu-button"
+            class="md:hidden rounded-xl border border-white/10 bg-white/[0.06] p-3 text-slate-300 hover:bg-white/[0.1] hover:text-white transition-colors"
+            aria-label="Toggle menu"
+          >
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden pb-4">
+          <nav class="flex flex-col gap-2 rounded-2xl border border-white/[0.08] bg-white/[0.045] p-2 backdrop-blur-2xl">
+            <a href="/" class="rounded-xl px-4 py-3 text-sm font-bold text-slate-300 transition-all duration-300 hover:bg-white/[0.07] hover:text-white">
+              Home
+            </a>
+            <a href="/distros" class="rounded-xl px-4 py-3 text-sm font-bold text-slate-300 transition-all duration-300 hover:bg-white/[0.07] hover:text-white">
+              Explore
+            </a>
+            <a href="/about" class="rounded-xl px-4 py-3 text-sm font-bold text-slate-300 transition-all duration-300 hover:bg-white/[0.07] hover:text-white">
               About
             </a>
           </nav>
@@ -187,5 +215,14 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
         </p>
       </div>
     </footer>
+
+    <script>
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+    </script>
   </body>
 </html>
