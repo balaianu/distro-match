@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { questions } from '../scripts/wizard-state.js';
+import { questions, emojiToImg } from '../scripts/wizard-state.js';
 import distros from '../data/distros.json';
 ---
 
@@ -931,7 +931,7 @@ import distros from '../data/distros.json';
               ${shortcutKey}
             </div>
             <div class="flex items-center gap-3">
-              <span class="text-2xl">${option.icon}</span>
+              <span class="text-2xl">${emojiToImg(option.icon)}</span>
               <span class="font-semibold ${isSelected ? 'text-white' : 'text-slate-200'}">${option.label}</span>
             </div>
             ${isSelected ? '<svg class="ml-auto h-5 w-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' : ''}
@@ -1105,7 +1105,7 @@ import distros from '../data/distros.json';
               <ul class="space-y-2 text-sm text-slate-300">
                 ${scoreBreakdown.map(factor => `
                   <li class="flex items-start gap-2">
-                    <span class="mt-0.5">${factor.icon}</span>
+                    <span class="mt-0.5">${emojiToImg(factor.icon)}</span>
                     <span>${factor.label}</span>
                   </li>
                 `).join('')}
