@@ -7,9 +7,9 @@ interface Props {
   image?: string;
 }
 
-const { title, description = "Find your perfect Linux distribution with our guided wizard. Answer a few questions about your experience, hardware, and preferences to get personalized recommendations for Ubuntu, Fedora, Arch, Debian, and more.", image = "/favicon.svg" } = Astro.props;
+const { title, description = "Find your perfect Linux distribution with our guided wizard. Answer a few questions about your experience, hardware, and preferences to get personalized recommendations for Ubuntu, Fedora, Arch, Debian, and more.", image = "/emojis/1f427.png" } = Astro.props;
 
-const siteUrl = "https://distromatch.com";
+const siteUrl = "https://distro-match.com";
 const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
 ---
 
@@ -20,7 +20,7 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <meta name="keywords" content="Linux, distro, distribution, Ubuntu, Fedora, Arch, Debian, wizard, selector, recommendation, open source" />
+    <meta name="keywords" content="Linux distro selector, Linux distribution finder, which Linux distro should I use, Linux distribution selector, Linux distro chooser, best Linux distro for beginners, Linux distro comparison, Linux, distro, distribution, Ubuntu, Fedora, Arch, Debian, wizard, selector, recommendation, open source" />
     <meta name="author" content="DistroMatch" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="theme-color" content="#070711" />
@@ -126,6 +126,98 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
             "@type": "SpeakableSpecification",
             "cssSelector": ["h1", "h2", "p"],
             "xpath": ["/html/head/title", "/html/body/h1", "/html/body/h2"]
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How does DistroMatch work?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "DistroMatch uses a guided wizard with 10 decision points about your experience level, use case, hardware specifications, desktop preferences, release model, package manager, support needs, philosophy, privacy requirements, and learning goals. Our weighted scoring algorithm then matches you with suitable Linux distributions based on your answers."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which Linux distro should I choose as a beginner?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "For beginners, we typically recommend Ubuntu, Linux Mint, or Fedora. These distributions offer good documentation, large communities, and user-friendly interfaces. Use our wizard to get personalized recommendations based on your specific needs and hardware."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is DistroMatch free to use?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, DistroMatch is completely free and open-source. We don't collect personal data, and our recommendations are unbiased. The project is MIT-licensed and available on GitHub."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How many Linux distributions does DistroMatch support?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "DistroMatch currently supports 50+ popular Linux distributions including Ubuntu, Fedora, Arch Linux, Debian, Mint, Manjaro, Pop!_OS, Zorin OS, elementary OS, and many more."
+                }
+              }
+            ]
+          },
+          {
+            "@type": "HowTo",
+            "name": "How to Find Your Perfect Linux Distribution with DistroMatch",
+            "description": "Step-by-step guide to using the DistroMatch wizard to find the best Linux distribution for your needs.",
+            "step": [
+              {
+                "@type": "HowToStep",
+                "position": 1,
+                "name": "Start the Wizard",
+                "text": "Click 'Find Your Perfect Match' on the homepage to begin the Linux distribution selector wizard."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 2,
+                "name": "Answer Experience Level",
+                "text": "Select your experience level with Linux: Beginner, Intermediate, Advanced, or Expert."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 3,
+                "name": "Specify Use Case",
+                "text": "Choose your primary use cases such as general desktop, development, server, gaming, or content creation."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 4,
+                "name": "Enter Hardware Specs",
+                "text": "Provide your RAM, disk space, and computer type to get hardware-appropriate recommendations."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 5,
+                "name": "Select Desktop Preferences",
+                "text": "Choose your preferred desktop environment (GNOME, KDE, XFCE, etc.) or let us recommend based on experience."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 6,
+                "name": "Set Release Model",
+                "text": "Select your preferred update model: Stable/LTS, Semi-rolling, Rolling, or Fixed Release."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 7,
+                "name": "Choose Package Manager",
+                "text": "Select your preferred package manager: APT (Debian/Ubuntu), DNF (Fedora), or Pacman (Arch)."
+              },
+              {
+                "@type": "HowToStep",
+                "position": 8,
+                "name": "View Recommendations",
+                "text": "Review your personalized Linux distribution recommendations with match percentages and detailed explanations."
+              }
+            ]
           }
         ]
       }

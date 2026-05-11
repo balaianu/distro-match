@@ -1,10 +1,35 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const articleData = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "About DistroMatch - A friendlier way to choose Linux",
+  "description": "Learn about DistroMatch - a free, open-source Linux distribution selector. Our privacy-friendly wizard helps you find the perfect Linux distro based on your experience, hardware, and preferences.",
+  "author": {
+    "@type": "Person",
+    "name": "Andrei Balaianu"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "DistroMatch",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://distro-match.com/favicon.svg"
+    }
+  },
+  "datePublished": "2024-01-01",
+  "dateModified": "2026-05-11",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://distro-match.com/about"
+  }
+};
 ---
 
 <Layout 
   title="About"
-  description="Learn about DistroMatch - a free, open-source Linux distribution selector. Our privacy-friendly wizard helps you find the perfect Linux distro based on your experience, hardware, and preferences."
+  description="Learn about DistroMatch - a free Linux distro selector and distribution finder. Our privacy-friendly Linux distro chooser helps you find the perfect Linux distribution based on experience, hardware, and preferences."
 >
   <div class="site-shell">
     <div class="content-frame-wide">
@@ -87,4 +112,6 @@ import Layout from '../layouts/Layout.astro';
     </section>
     </div>
   </div>
+
+  <script type="application/ld+json" set:html={JSON.stringify(articleData)}></script>
 </Layout>
