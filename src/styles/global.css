@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Load Noto Color Emoji for consistent Ubuntu-style emoji rendering */
-@font-face {
-  font-family: 'Noto Color Emoji';
-  src: url('https://fonts.gstatic.com/s/notocoloremo/v36/Yq6P-0qD79XPsWCvLU0kaMY5bM4b0pS4A2.woff2') format('woff2');
-  font-display: swap;
-}
-
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -16,7 +9,7 @@
 
   body {
     @apply min-h-screen bg-[#070711] text-slate-100 antialiased;
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif, "Noto Color Emoji";
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     background:
       radial-gradient(circle at 20% 10%, rgba(168, 85, 247, 0.24), transparent 28rem),
@@ -27,15 +20,13 @@
     overflow-x: hidden;
   }
 
-  /* Force Noto Color Emoji for consistent Ubuntu-style rendering */
-  .emoji-only, .option-icon, * {
-    font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif !important;
-  }
-
-  /* Ensure native emojis display in full color - only for emoji content */
-  .emoji-only {
-    text-shadow: none !important;
-    font-variant-emoji: emoji !important;
+  /* Emoji image styling for consistent Ubuntu-style rendering */
+  .emoji-img {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    margin: 0 0.05em;
   }
 
   /* Force emoji color rendering */
