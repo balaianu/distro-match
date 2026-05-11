@@ -3,4 +3,4 @@ Allow: /
 Disallow: /_astro/
 Disallow: /.astro/
 
-Sitemap: https://distromatch.com/sitemap.xml
+Sitemap: https://distro-match.com/sitemap.xml
