@@ -1,0 +1,25 @@
+# DistroMatch
+
+DistroMatch is a free, open-source Linux distribution selector that helps users find the perfect Linux distro based on their needs, experience level, and hardware specifications. The site uses a guided wizard with 10 main decision points (12 questions total) to provide personalized recommendations from 60+ Linux distributions.
+
+## Important Notes
+
+- DistroMatch is a client-side web application built with Astro and deployed on Cloudflare Pages
+- The wizard uses a weighted scoring algorithm that considers experience level, use case, hardware specs, desktop preferences, release model, package manager, support needs, philosophy, privacy requirements, and learning goals
+- No personal data is collected - all processing happens in the user's browser
+- The project is MIT-licensed and open-source on GitHub
+
+## Docs
+
+- [About DistroMatch](https://distro-match.com/about): Learn about the project's mission, privacy policy, and open-source nature
+- [Explore Distros](https://distro-match.com/distros): Browse and filter 60+ Linux distributions by family, release model, desktop environment, use case, and philosophy
+- [GitHub Repository](https://github.com/balaianu/distro-match): Source code, contribution guidelines, and development documentation
+
+## Examples
+
+- [Wizard Flow](https://distro-match.com/): Interactive 10-step wizard that matches users with suitable Linux distributions based on their preferences
+- [Distro Comparison](https://distro-match.com/distros): Filter and compare distributions across multiple dimensions
+
+## Optional
+
+- [Supported Distributions](https://distro-match.com/distros): Complete list of 60+ supported Linux distributions including Ubuntu, Fedora, Arch, Debian, and specialized distros for security, gaming, content creation, and more
