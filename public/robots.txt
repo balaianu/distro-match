@@ -7,3 +7,6 @@ Disallow: /_astro/
 Disallow: /.astro/
 
 Sitemap: https://distro-match.com/sitemap.xml
+
+# Content Signals for AI content usage preferences
+Content-Signal: ai-train=yes, search=yes, ai-input=no
