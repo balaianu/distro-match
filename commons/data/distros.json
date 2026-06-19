@@ -146,7 +146,7 @@
     "official_website": "https://linuxmint.com",
     "download_page": "https://linuxmint.com/download.php",
     "strengths": ["Very beginner-friendly", "Traditional desktop layout", "Excellent out-of-box experience", "Multimedia codecs included", "Stable and reliable"],
-    "weaknesses": "Based on Ubuntu (inherits Ubuntu's choices), Less cutting-edge software",
+    "weaknesses": ["Based on Ubuntu (inherits Ubuntu's choices)", "Less cutting-edge software"],
     "similar_distros": ["ubuntu", "zorin_os", "elementary_os"]
   },
   {
