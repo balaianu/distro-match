@@ -1,11 +1,20 @@
-# Dependencies
-node_modules/
+# Web project
+web/node_modules/
+web/dist/
+web/.astro/
+web/.wrangler/
+web/wrangler.toml
+web/src/data/distros.json
 
-# Build output
-dist/
+# TUI project
+/tui/distro-match
+/tui/distro-match.exe
+/tui/distros.json
 
-# Astro cache
-.astro/
+# Go
+*.test
+*.out
+vendor/
 
 # Environment variables
 .env
@@ -28,10 +37,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
-
-# Cloudflare Pages
-.wrangler/
-wrangler.toml
 
 # Vercel
 .vercel/
