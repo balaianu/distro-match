@@ -10,6 +10,7 @@ web/src/data/distros.json
 /tui/distro-match
 /tui/distro-match.exe
 /tui/distros.json
+/tui/dist/
 
 # Go
 *.test
