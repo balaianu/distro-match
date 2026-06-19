@@ -1,0 +1,24 @@
+[Unit]
+Description=DistroMatch SSH Server
+After=network.target
+
+[Service]
+Type=simple
+User=distromatch
+Group=distromatch
+WorkingDirectory=/opt/distromatch
+ExecStart=/opt/distromatch/bin/distro-match --serve :22 --host-key /opt/distromatch/ssh/host_ed25519
+Restart=on-failure
+RestartSec=5
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/opt/distromatch/ssh
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target
