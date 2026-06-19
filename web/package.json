@@ -10,6 +10,7 @@
   "homepage": "https://distro-match.com",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node -e \"require('fs').copyFileSync('../commons/data/distros.json','src/data/distros.json')\"",
     "build": "astro build",
     "preview": "npm run build && wrangler dev",
     "astro": "astro",
