@@ -1,5 +1,3 @@
-import distros from '../data/distros.json';
-
 // Scoring weights
 const WEIGHTS = {
   experienceLevel: 0.25,
@@ -15,23 +13,30 @@ const WEIGHTS = {
   philosophy: 0.01,
 };
 
-// Helper functions
-function scoreExperienceLevel(distro, preference) {
+// Sum of weights, used to normalize scores to a 0-100 scale
+const WEIGHTS_TOTAL = Object.values(WEIGHTS).reduce((a, b) => a + b, 0);
+
+// Scoring functions
+export function scoreExperienceLevel(distro, preference) {
   if (!preference || preference === 'not_sure') return 1;
-  
+
   const experienceMap = {
     beginner: ['beginner'],
     intermediate: ['beginner', 'intermediate'],
     advanced: ['intermediate', 'advanced'],
     expert: ['advanced', 'expert'],
   };
-  
+
   const acceptableLevels = experienceMap[preference] || [];
-  return distro.experience_level.some(level => acceptableLevels.includes(level)) ? 1 : 0.3;
+  const exactMatch = distro.experience_level.some(level => level === preference);
+  const acceptableMatch = distro.experience_level.some(level => acceptableLevels.includes(level));
+  if (exactMatch) return 1;
+  if (acceptableMatch) return 0.8;
+  return 0.3;
 }
 
-function scoreUseCase(distro, preference) {
-  if (!preference || preference === 'not_sure') return 1;
+export function scoreUseCase(distro, preference) {
+  if (!preference || (Array.isArray(preference) && preference.length === 0) || preference === 'not_sure') return 1;
 
   const useCaseMap = {
     general_desktop: ['general_desktop'],
@@ -40,13 +45,38 @@ function scoreUseCase(distro, preference) {
     security: ['security'],
     gaming: ['general_desktop', 'gaming'],
     content_creation: ['general_desktop', 'content_creation'],
+    old_hardware: ['general_desktop', 'old_hardware'],
+    privacy: ['general_desktop', 'privacy'],
   };
 
-  const acceptableUseCases = useCaseMap[preference] || [preference];
-  return distro.use_cases.some(uc => acceptableUseCases.includes(uc)) ? 1 : 0.2;
+  const preferences = Array.isArray(preference) ? preference : [preference];
+  let totalScore = 0;
+  let exactMatches = 0;
+
+  for (const pref of preferences) {
+    if (pref === 'not_sure') continue;
+    const acceptableUseCases = useCaseMap[pref] || [pref];
+    const exactMatch = distro.use_cases.includes(pref);
+    const acceptableMatch = distro.use_cases.some(uc => acceptableUseCases.includes(uc));
+    if (exactMatch) {
+      totalScore += 1;
+      exactMatches++;
+    } else if (acceptableMatch) {
+      totalScore += 0.8;
+    } else {
+      totalScore += 0.2;
+    }
+  }
+
+  const avgScore = Math.min(1, totalScore / preferences.length);
+  // Bonus for high exact match ratio
+  if (exactMatches === preferences.length && preferences.length > 1) {
+    return Math.min(1, avgScore + 0.1);
+  }
+  return avgScore;
 }
 
-function scoreHardware(distro, hardware) {
+export function scoreHardware(distro, hardware) {
   let score = 1;
 
   if (hardware.ram && hardware.ram !== 'not_sure') {
@@ -94,9 +124,9 @@ function scoreHardware(distro, hardware) {
   return score;
 }
 
-function scoreDesktopEnvironment(distro, preference) {
-  if (!preference || preference === 'no_preference') return 1;
-  
+export function scoreDesktopEnvironment(distro, preference) {
+  if (!preference || (Array.isArray(preference) && preference.length === 0) || preference === 'no_preference') return 1;
+
   const deMap = {
     gnome: ['GNOME'],
     kde: ['KDE Plasma'],
@@ -107,28 +137,48 @@ function scoreDesktopEnvironment(distro, preference) {
     i3: ['i3', 'Sway'],
     lxqt: ['LXQt', 'LXDE'],
   };
-  
-  const acceptableDEs = deMap[preference] || [];
-  if (acceptableDEs.length === 0) return 1;
-  
-  return distro.desktop_environments.some(de => acceptableDEs.includes(de)) ? 1 : 0.4;
+
+  const preferences = Array.isArray(preference) ? preference : [preference];
+  let totalScore = 0;
+
+  for (const pref of preferences) {
+    if (pref === 'no_preference') continue;
+    const acceptableDEs = deMap[pref] || [];
+    if (acceptableDEs.length === 0) {
+      totalScore += 0.5;
+      continue;
+    }
+    if (distro.desktop_environments.includes('Any')) {
+      totalScore += 0.9;
+      continue;
+    }
+    const exactMatch = distro.desktop_environments.some(de => de === pref || acceptableDEs.includes(de));
+    if (exactMatch) totalScore += 1;
+    else totalScore += 0.3;
+  }
+
+  return Math.min(1, totalScore / preferences.length);
 }
 
-function scoreReleaseModel(distro, preference) {
+export function scoreReleaseModel(distro, preference) {
   if (!preference || preference === 'no_preference') return 1;
-  
+
   const modelMap = {
     stable_lts: ['stable_lts'],
     semi_rolling: ['semi_rolling'],
     rolling: ['rolling', 'semi_rolling'],
     fixed_release: ['fixed_release', 'stable_lts'],
   };
-  
+
   const acceptableModels = modelMap[preference] || [];
-  return acceptableModels.includes(distro.release_model) ? 1 : 0.5;
+  const exactMatch = distro.release_model === preference;
+  const acceptableMatch = acceptableModels.includes(distro.release_model);
+  if (exactMatch) return 1;
+  if (acceptableMatch) return 0.7;
+  return 0.3;
 }
 
-function scorePackageManager(distro, preference) {
+export function scorePackageManager(distro, preference) {
   if (!preference || preference === 'no_preference') return 1;
 
   const pmMap = {
@@ -139,30 +189,40 @@ function scorePackageManager(distro, preference) {
   };
 
   const acceptablePMs = pmMap[preference] || [];
-  return acceptablePMs.includes(distro.package_manager) ? 1 : 0.5;
+  const exactMatch = distro.package_manager === preference;
+  const acceptableMatch = acceptablePMs.includes(distro.package_manager);
+  if (exactMatch) return 1;
+  if (acceptableMatch) return 0.7;
+  return 0.3;
 }
 
-function scoreSupportLevel(distro, preference) {
-  if (!preference || preference === 'no_preference') return 1;
-  
+export function scoreSupportLevel(distro, preference) {
+  if (!preference || (Array.isArray(preference) && preference.length === 0) || preference === 'no_preference') return 1;
+
   const supportMap = {
     extensive: ['extensive', 'good'],
     professional: ['extensive', 'good'],
     documentation: ['high', 'excellent'],
     minimal: ['good', 'high'],
   };
-  
-  const acceptableSupport = supportMap[preference] || [];
-  
-  let score = 0;
-  if (acceptableSupport.includes(distro.community_support)) score += 0.7;
-  if (distro.professional_support && preference === 'professional') score += 0.3;
-  if (acceptableSupport.includes(distro.documentation_quality)) score += 0.5;
-  
-  return Math.min(score, 1);
+
+  const preferences = Array.isArray(preference) ? preference : [preference];
+  let totalScore = 0;
+
+  for (const pref of preferences) {
+    if (pref === 'no_preference') continue;
+    const acceptableSupport = supportMap[pref] || [];
+    let score = 0;
+    if (acceptableSupport.includes(distro.community_support)) score += 0.5;
+    if (distro.professional_support && pref === 'professional') score += 0.3;
+    if (acceptableSupport.includes(distro.documentation_quality)) score += 0.3;
+    totalScore += Math.min(score, 1);
+  }
+
+  return Math.min(1, totalScore / preferences.length);
 }
 
-function scorePhilosophy(distro, preference) {
+export function scorePhilosophy(distro, preference) {
   if (!preference || preference === 'no_preference') return 1;
 
   const philosophyMap = {
@@ -172,10 +232,14 @@ function scorePhilosophy(distro, preference) {
   };
 
   const acceptablePhilosophies = philosophyMap[preference] || [];
-  return acceptablePhilosophies.includes(distro.philosophy) ? 1 : 0.6;
+  const exactMatch = distro.philosophy === preference;
+  const acceptableMatch = acceptablePhilosophies.includes(distro.philosophy);
+  if (exactMatch) return 1;
+  if (acceptableMatch) return 0.7;
+  return 0.3;
 }
 
-function scoreHardwareType(distro, preference) {
+export function scoreHardwareType(distro, preference) {
   if (!preference || preference === 'not_sure') return 1;
 
   const typeMap = {
@@ -207,7 +271,7 @@ function scoreHardwareType(distro, preference) {
   return 0.5;
 }
 
-function scorePrivacyLevel(distro, preference) {
+export function scorePrivacyLevel(distro, preference) {
   if (!preference || preference === 'not_sure' || preference === 'casual') return 1;
 
   // High/extreme privacy: prioritize privacy-focused distros
@@ -228,7 +292,7 @@ function scorePrivacyLevel(distro, preference) {
   return 0.5;
 }
 
-function scoreLearningGoal(distro, preference) {
+export function scoreLearningGoal(distro, preference) {
   if (!preference || preference === 'not_sure') return 1;
 
   // Productivity - low maintenance, stable, user-friendly
@@ -261,7 +325,7 @@ function scoreLearningGoal(distro, preference) {
 }
 
 // Main scoring function
-export function calculateScores(preferences) {
+export function calculateScores(preferences, distros) {
   return distros.map(distro => {
     let totalScore = 0;
 
@@ -300,14 +364,14 @@ export function calculateScores(preferences) {
 
     return {
       ...distro,
-      score: Math.round(totalScore * 100),
+      score: Math.round((totalScore / WEIGHTS_TOTAL) * 100),
     };
   });
 }
 
 // Get top recommendations with dynamic result count
-export function getRecommendations(preferences) {
-  const scoredDistros = calculateScores(preferences);
+export function getRecommendations(preferences, distros) {
+  const scoredDistros = calculateScores(preferences, distros);
 
   // Filter out distros with very low scores (< 25%)
   const filtered = scoredDistros.filter(d => d.score >= 25);
@@ -360,14 +424,20 @@ function countMatches(distro, preferences) {
     matches++;
   }
 
-  // Use case
-  if (preferences.useCase && distro.use_cases.includes(preferences.useCase)) {
-    matches++;
+  // Use case (handle arrays)
+  if (preferences.useCase) {
+    const ucs = Array.isArray(preferences.useCase) ? preferences.useCase : [preferences.useCase];
+    if (ucs.some(uc => distro.use_cases.includes(uc))) {
+      matches++;
+    }
   }
 
-  // Desktop environment
-  if (preferences.desktopEnvironment && distro.desktop_environments.includes(preferences.desktopEnvironment)) {
-    matches++;
+  // Desktop environment (handle arrays)
+  if (preferences.desktopEnvironment) {
+    const des = Array.isArray(preferences.desktopEnvironment) ? preferences.desktopEnvironment : [preferences.desktopEnvironment];
+    if (des.some(de => distro.desktop_environments.includes(de))) {
+      matches++;
+    }
   }
 
   // Release model
@@ -391,15 +461,16 @@ function countMatches(distro, preferences) {
 // Apply diversity filter to avoid showing too many similar distros
 function applyDiversityFilter(distros) {
   const diverse = [];
-  const seenFamilies = new Set();
+  const familyCounts = new Map();
 
   for (const distro of distros) {
     const family = distro.based_on || 'independent';
 
     // Allow up to 2 distros from the same family
-    if (!seenFamilies.has(family) || seenFamilies.get(family) < 2) {
+    const count = familyCounts.get(family) || 0;
+    if (count < 2) {
       diverse.push(distro);
-      seenFamilies.set(family, (seenFamilies.get(family) || 0) + 1);
+      familyCounts.set(family, count + 1);
     }
   }
 

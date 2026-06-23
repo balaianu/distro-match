@@ -1,6 +1,17 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+}
 
 @layer base {
   html {
@@ -205,7 +216,7 @@
   }
   
   .card {
-    @apply relative overflow-hidden rounded-[2rem] border border-white/[0.10] bg-white/[0.055] p-6 backdrop-blur-2xl transition-all duration-300 sm:p-8;
+    @apply relative overflow-hidden rounded-[2rem] border border-white/[0.10] bg-white/[0.055] p-6 transition-all duration-300 sm:p-8;
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255,255,255,0.08);
   }
 
