@@ -15,6 +15,9 @@ const WEIGHTS = {
   philosophy: 0.01,
 };
 
+// Sum of weights, used to normalize scores to a 0-100 scale
+const WEIGHTS_TOTAL = Object.values(WEIGHTS).reduce((a, b) => a + b, 0);
+
 // Helper functions
 function scoreExperienceLevel(distro, preference) {
   if (!preference || preference === 'not_sure') return 1;
@@ -300,7 +303,7 @@ export function calculateScores(preferences) {
 
     return {
       ...distro,
-      score: Math.round(totalScore * 100),
+      score: Math.round((totalScore / WEIGHTS_TOTAL) * 100),
     };
   });
 }
@@ -391,15 +394,16 @@ function countMatches(distro, preferences) {
 // Apply diversity filter to avoid showing too many similar distros
 function applyDiversityFilter(distros) {
   const diverse = [];
-  const seenFamilies = new Set();
+  const familyCounts = new Map();
 
   for (const distro of distros) {
     const family = distro.based_on || 'independent';
 
     // Allow up to 2 distros from the same family
-    if (!seenFamilies.has(family) || seenFamilies.get(family) < 2) {
+    const count = familyCounts.get(family) || 0;
+    if (count < 2) {
       diverse.push(distro);
-      seenFamilies.set(family, (seenFamilies.get(family) || 0) + 1);
+      familyCounts.set(family, count + 1);
     }
   }
 
