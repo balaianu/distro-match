@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.1",
-    "astro": "^6.4.8",
+    "astro": "^7.0.2",
     "tailwindcss": "^4.3.1",
     "twemoji": "^14.0.2"
   },
