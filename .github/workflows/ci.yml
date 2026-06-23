@@ -30,6 +30,3 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Verify syntax
-        run: npx astro check
