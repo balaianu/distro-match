@@ -1,8 +1,8 @@
 [
   {
-    "id": "ubuntu-24.04",
+    "id": "ubuntu",
     "name": "Ubuntu",
-    "version": "24.04 LTS",
+    "version": "26.04 LTS",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "development", "server"],
     "min_ram_gb": 4,
@@ -25,9 +25,9 @@
     "similar_distros": ["linux_mint", "pop_os", "zorin_os"]
   },
   {
-    "id": "kubuntu-24.04",
+    "id": "kubuntu",
     "name": "Kubuntu",
-    "version": "24.04 LTS",
+    "version": "26.04 LTS",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "development"],
     "min_ram_gb": 4,
@@ -50,9 +50,9 @@
     "similar_distros": ["ubuntu", "kde_neon", "fedora_kde"]
   },
   {
-    "id": "ubuntu-mate-24.04",
+    "id": "ubuntu-mate",
     "name": "Ubuntu MATE",
-    "version": "24.04 LTS",
+    "version": "26.04 LTS",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "old_hardware"],
     "min_ram_gb": 2,
@@ -75,9 +75,9 @@
     "similar_distros": ["linux_mint", "xubuntu", "fedora_mate"]
   },
   {
-    "id": "ubuntu-budgie-24.04",
+    "id": "ubuntu-budgie",
     "name": "Ubuntu Budgie",
-    "version": "24.04 LTS",
+    "version": "26.04 LTS",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop"],
     "min_ram_gb": 4,
@@ -100,9 +100,9 @@
     "similar_distros": ["solus", "ubuntu", "elementary_os"]
   },
   {
-    "id": "ubuntu-studio-24.04",
+    "id": "ubuntu-studio",
     "name": "Ubuntu Studio",
-    "version": "24.04 LTS",
+    "version": "26.04 LTS",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["content_creation", "development"],
     "min_ram_gb": 8,
@@ -125,9 +125,9 @@
     "similar_distros": ["fedora_design_suite", "kubuntu", "av_linux"]
   },
   {
-    "id": "linux-mint-22",
+    "id": "linux-mint",
     "name": "Linux Mint",
-    "version": "22",
+    "version": "22.3",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "development"],
     "min_ram_gb": 2,
@@ -150,9 +150,9 @@
     "similar_distros": ["ubuntu", "zorin_os", "elementary_os"]
   },
   {
-    "id": "zorin-os-17",
+    "id": "zorin-os",
     "name": "Zorin OS",
-    "version": "17",
+    "version": "18.1",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "development"],
     "min_ram_gb": 4,
@@ -175,7 +175,7 @@
     "similar_distros": ["ubuntu", "linux_mint", "elementary_os"]
   },
   {
-    "id": "pop-os-24.04",
+    "id": "pop-os",
     "name": "Pop!_OS",
     "version": "24.04 LTS",
     "experience_level": ["beginner", "intermediate"],
@@ -200,9 +200,9 @@
     "similar_distros": ["ubuntu", "fedora", "manjaro"]
   },
   {
-    "id": "elementary-os-8",
+    "id": "elementary-os",
     "name": "elementary OS",
-    "version": "8",
+    "version": "8.1.1",
     "experience_level": ["beginner"],
     "use_cases": ["general_desktop"],
     "min_ram_gb": 4,
@@ -225,9 +225,9 @@
     "similar_distros": ["ubuntu", "zorin_os", "linux_mint"]
   },
   {
-    "id": "fedora-41",
+    "id": "fedora",
     "name": "Fedora",
-    "version": "41 Workstation",
+    "version": "44 Workstation",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["general_desktop", "development", "server"],
     "min_ram_gb": 4,
@@ -250,9 +250,9 @@
     "similar_distros": ["rhel", "centos_stream", "opensuse"]
   },
   {
-    "id": "debian-12",
+    "id": "debian",
     "name": "Debian",
-    "version": "12 Bookworm",
+    "version": "13 Trixie",
     "experience_level": ["intermediate", "advanced", "expert"],
     "use_cases": ["general_desktop", "development", "server"],
     "min_ram_gb": 2,
@@ -327,7 +327,7 @@
   {
     "id": "kali-linux",
     "name": "Kali Linux",
-    "version": "2024.4",
+    "version": "2026.2",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["security", "penetration_testing"],
     "min_ram_gb": 2,
@@ -350,9 +350,9 @@
     "similar_distros": ["parrot_os", "blackarch"]
   },
   {
-    "id": "lubuntu-24.04",
+    "id": "lubuntu",
     "name": "Lubuntu",
-    "version": "24.04 LTS",
+    "version": "26.04 LTS",
     "experience_level": ["beginner"],
     "use_cases": ["general_desktop", "old_hardware"],
     "min_ram_gb": 1,
@@ -375,9 +375,9 @@
     "similar_distros": ["xubuntu", "linux_lite", "antiX"]
   },
   {
-    "id": "xubuntu-24.04",
+    "id": "xubuntu",
     "name": "Xubuntu",
-    "version": "24.04 LTS",
+    "version": "26.04 LTS",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "old_hardware"],
     "min_ram_gb": 2,
@@ -427,7 +427,7 @@
   {
     "id": "opensuse-leap",
     "name": "openSUSE Leap",
-    "version": "15.6",
+    "version": "16.0",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["general_desktop", "development", "server"],
     "min_ram_gb": 2,
@@ -450,9 +450,9 @@
     "similar_distros": ["rhel", "centos_stream", "fedora"]
   },
   {
-    "id": "mx-linux-23",
+    "id": "mx-linux",
     "name": "MX Linux",
-    "version": "23.4",
+    "version": "25.2",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "old_hardware"],
     "min_ram_gb": 2,
@@ -475,9 +475,9 @@
     "similar_distros": ["linux_mint", "antiX", "debian"]
   },
   {
-    "id": "deepin-23",
+    "id": "deepin",
     "name": "Deepin",
-    "version": "23",
+    "version": "25.2.1",
     "experience_level": ["beginner"],
     "use_cases": ["general_desktop"],
     "min_ram_gb": 4,
@@ -500,9 +500,9 @@
     "similar_distros": ["elementary_os", "zorin_os", "ubuntu"]
   },
   {
-    "id": "peppermint-os-12",
+    "id": "peppermint-os",
     "name": "Peppermint OS",
-    "version": "12",
+    "version": "Debian Trixie",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "old_hardware"],
     "min_ram_gb": 1,
@@ -525,9 +525,9 @@
     "similar_distros": ["lubuntu", "xubuntu", "linux_lite"]
   },
   {
-    "id": "linux-lite-7",
+    "id": "linux-lite",
     "name": "Linux Lite",
-    "version": "7.2",
+    "version": "8.0",
     "experience_level": ["beginner"],
     "use_cases": ["general_desktop", "old_hardware"],
     "min_ram_gb": 1,
@@ -550,9 +550,9 @@
     "similar_distros": ["lubuntu", "zorin_os", "linux_mint"]
   },
   {
-    "id": "antix-23",
+    "id": "antix",
     "name": "antiX",
-    "version": "23",
+    "version": "26",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["old_hardware", "general_desktop"],
     "min_ram_gb": 0.5,
@@ -652,7 +652,7 @@
   {
     "id": "fedora-kde",
     "name": "Fedora KDE",
-    "version": "41 Spin",
+    "version": "44 Spin",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["general_desktop", "development"],
     "min_ram_gb": 4,
@@ -677,7 +677,7 @@
   {
     "id": "fedora-xfce",
     "name": "Fedora XFCE",
-    "version": "41 Spin",
+    "version": "44 Spin",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "old_hardware"],
     "min_ram_gb": 2,
@@ -702,7 +702,7 @@
   {
     "id": "nobara-linux",
     "name": "Nobara Linux",
-    "version": "41",
+    "version": "44",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["gaming", "general_desktop", "content_creation"],
     "min_ram_gb": 4,
@@ -725,9 +725,9 @@
     "similar_distros": ["pop_os", "fedora", "garuda_linux"]
   },
   {
-    "id": "rhel-9",
+    "id": "rhel",
     "name": "Red Hat Enterprise Linux",
-    "version": "9.5",
+    "version": "10.2",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["server", "development"],
     "min_ram_gb": 2,
@@ -750,9 +750,9 @@
     "similar_distros": ["rocky_linux", "almalinux", "centos_stream"]
   },
   {
-    "id": "rocky-linux-9",
+    "id": "rocky-linux",
     "name": "Rocky Linux",
-    "version": "9.5",
+    "version": "10.2",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["server", "development"],
     "min_ram_gb": 2,
@@ -775,9 +775,9 @@
     "similar_distros": ["rhel", "almalinux", "centos_stream"]
   },
   {
-    "id": "almalinux-9",
+    "id": "almalinux",
     "name": "AlmaLinux",
-    "version": "9.5",
+    "version": "10.2",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["server", "development"],
     "min_ram_gb": 2,
@@ -800,9 +800,9 @@
     "similar_distros": ["rhel", "rocky_linux", "centos_stream"]
   },
   {
-    "id": "centos-stream-9",
+    "id": "centos-stream",
     "name": "CentOS Stream",
-    "version": "9",
+    "version": "10",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["server", "development"],
     "min_ram_gb": 2,
@@ -825,9 +825,9 @@
     "similar_distros": ["rhel", "fedora", "rocky_linux"]
   },
   {
-    "id": "solus-4",
+    "id": "solus",
     "name": "Solus",
-    "version": "4.6",
+    "version": "4.9",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "development"],
     "min_ram_gb": 4,
@@ -850,9 +850,9 @@
     "similar_distros": ["ubuntu_budgie", "fedora", "manjaro"]
   },
   {
-    "id": "nixos-24",
+    "id": "nixos",
     "name": "NixOS",
-    "version": "24.11",
+    "version": "26.05",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["development", "server", "general_desktop"],
     "min_ram_gb": 2,
@@ -900,7 +900,7 @@
     "similar_distros": ["funtoo", "arch_linux", "slackware"]
   },
   {
-    "id": "slackware-15",
+    "id": "slackware",
     "name": "Slackware",
     "version": "15.0",
     "experience_level": ["expert"],
@@ -952,7 +952,7 @@
   {
     "id": "alpine-linux",
     "name": "Alpine Linux",
-    "version": "3.20",
+    "version": "3.24.1",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["server", "old_hardware"],
     "min_ram_gb": 0.3,
@@ -975,9 +975,9 @@
     "similar_distros": ["void_linux", "tiny_core", "antiX"]
   },
   {
-    "id": "tails-6",
+    "id": "tails",
     "name": "Tails",
-    "version": "6.0",
+    "version": "7.10.1",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["privacy", "security"],
     "min_ram_gb": 2,
@@ -1000,9 +1000,9 @@
     "similar_distros": ["qubes_os", "whonix", "kali_linux"]
   },
   {
-    "id": "qubes-os-5",
+    "id": "qubes-os",
     "name": "Qubes OS",
-    "version": "5.2",
+    "version": "4.3.1",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["security", "privacy"],
     "min_ram_gb": 8,
@@ -1025,9 +1025,9 @@
     "similar_distros": ["tails", "whonix", "kali_linux"]
   },
   {
-    "id": "parrot-os-6",
+    "id": "parrot-os",
     "name": "Parrot OS",
-    "version": "6.0",
+    "version": "7.3",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["security", "penetration_testing", "privacy"],
     "min_ram_gb": 2,
@@ -1075,9 +1075,9 @@
     "similar_distros": ["kubuntu", "fedora_kde", "manjaro_kde"]
   },
   {
-    "id": "trisquel-11",
+    "id": "trisquel",
     "name": "Trisquel",
-    "version": "11.0",
+    "version": "12.0",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["general_desktop", "privacy"],
     "min_ram_gb": 2,
@@ -1100,7 +1100,7 @@
     "similar_distros": ["ubuntu", "debian", "pureos"]
   },
   {
-    "id": "pureos-11",
+    "id": "pureos",
     "name": "PureOS",
     "version": "11",
     "experience_level": ["beginner", "intermediate"],
@@ -1125,9 +1125,9 @@
     "similar_distros": ["debian", "trisquel", "ubuntu"]
   },
   {
-    "id": "sparkylinux-7",
+    "id": "sparkylinux",
     "name": "SparkyLinux",
-    "version": "7.2",
+    "version": "8.4",
     "experience_level": ["intermediate"],
     "use_cases": ["general_desktop", "old_hardware"],
     "min_ram_gb": 2,
@@ -1177,7 +1177,7 @@
   {
     "id": "rosa-linux",
     "name": "ROSA Linux",
-    "version": "12.5",
+    "version": "13.2",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "development"],
     "min_ram_gb": 2,
@@ -1202,7 +1202,7 @@
   {
     "id": "puppy-linux",
     "name": "Puppy Linux",
-    "version": "Slacko64",
+    "version": "TrixiePup64",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["old_hardware", "general_desktop"],
     "min_ram_gb": 0.3,
@@ -1227,7 +1227,7 @@
   {
     "id": "tiny-core-linux",
     "name": "Tiny Core Linux",
-    "version": "14.0",
+    "version": "17.1",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["old_hardware", "server"],
     "min_ram_gb": 0.05,
@@ -1252,7 +1252,7 @@
   {
     "id": "bazzite",
     "name": "Bazzite",
-    "version": "41",
+    "version": "44",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["gaming", "general_desktop", "content_creation"],
     "min_ram_gb": 4,
@@ -1277,7 +1277,7 @@
   {
     "id": "bluefin",
     "name": "Bluefin",
-    "version": "41",
+    "version": "44",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["development", "general_desktop"],
     "min_ram_gb": 4,
@@ -1302,7 +1302,7 @@
   {
     "id": "vanilla-os",
     "name": "Vanilla OS",
-    "version": "24.04",
+    "version": "2 Orchid",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["general_desktop", "development"],
     "min_ram_gb": 4,
@@ -1352,7 +1352,7 @@
   {
     "id": "biglinux",
     "name": "BigLinux",
-    "version": "24.04",
+    "version": "2026-07-13",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "development"],
     "min_ram_gb": 4,
@@ -1402,7 +1402,7 @@
   {
     "id": "raspberry-pi-os",
     "name": "Raspberry Pi OS",
-    "version": "Bookworm",
+    "version": "6.2 Trixie",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "development", "server"],
     "min_ram_gb": 0.5,
@@ -1427,7 +1427,7 @@
   {
     "id": "nitrux",
     "name": "Nitrux",
-    "version": "3.5",
+    "version": "6.0",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "development"],
     "min_ram_gb": 4,
@@ -1452,7 +1452,7 @@
   {
     "id": "bedrock-linux",
     "name": "Bedrock Linux",
-    "version": "0.7",
+    "version": "0.7.31",
     "experience_level": ["expert"],
     "use_cases": ["development", "general_desktop"],
     "min_ram_gb": 2,
@@ -1527,7 +1527,7 @@
   {
     "id": "kodachi",
     "name": "Kodachi",
-    "version": "9.0",
+    "version": "9.0.1",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["privacy", "security"],
     "min_ram_gb": 4,
@@ -1552,7 +1552,7 @@
   {
     "id": "openmediavault",
     "name": "OpenMediaVault",
-    "version": "7.0",
+    "version": "8.5.5",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["server", "nas"],
     "min_ram_gb": 1,
