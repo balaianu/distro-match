@@ -52,7 +52,7 @@ describe('calculateScores', () => {
 describe('scoreExperienceLevel', () => {
   it('gives full score when distro matches user experience level', () => {
     const results = calculateScores(prefs({ experienceLevel: 'beginner' }), distros);
-    const ubuntu = findDistro(results, 'ubuntu-24.04');
+    const ubuntu = findDistro(results, 'ubuntu');
     // Ubuntu supports beginner — should get full experience score
     expect(ubuntu.score).toBeGreaterThanOrEqual(90);
   });
@@ -76,22 +76,22 @@ describe('scoreHardware', () => {
   it('penalizes distros requiring more RAM than available', () => {
     const lowRam = calculateScores(prefs({ hardware: { ram: 'lt_2gb', disk: null, type: null } }), distros);
     const highRam = calculateScores(prefs({ hardware: { ram: 'gt_16gb', disk: null, type: null } }), distros);
-    const ubuntu = findDistro(lowRam, 'ubuntu-24.04');
-    const ubuntuHigh = findDistro(highRam, 'ubuntu-24.04');
+    const ubuntu = findDistro(lowRam, 'ubuntu');
+    const ubuntuHigh = findDistro(highRam, 'ubuntu');
     expect(ubuntu.score).toBeLessThanOrEqual(ubuntuHigh.score);
   });
 
   it('penalizes distros requiring more disk than available', () => {
     const lowDisk = calculateScores(prefs({ hardware: { ram: null, disk: 'lt_20gb', type: null } }), distros);
     const highDisk = calculateScores(prefs({ hardware: { ram: null, disk: 'gt_100gb', type: null } }), distros);
-    const ubuntu = findDistro(lowDisk, 'ubuntu-24.04');
-    const ubuntuHigh = findDistro(highDisk, 'ubuntu-24.04');
+    const ubuntu = findDistro(lowDisk, 'ubuntu');
+    const ubuntuHigh = findDistro(highDisk, 'ubuntu');
     expect(ubuntu.score).toBeLessThanOrEqual(ubuntuHigh.score);
   });
 
   it('penalizes architecture mismatch for Raspberry Pi', () => {
     const rpi = calculateScores(prefs({ hardware: { ram: null, disk: null, type: 'raspberry_pi' } }), distros);
-    const ubuntu = findDistro(rpi, 'ubuntu-24.04');
+    const ubuntu = findDistro(rpi, 'ubuntu');
     // Ubuntu supports arm64, so should still score reasonably
     expect(ubuntu.score).toBeGreaterThan(50);
   });
@@ -107,13 +107,13 @@ describe('scoreHardware', () => {
 describe('scoreUseCase', () => {
   it('gives full score for matching use case', () => {
     const results = calculateScores(prefs({ useCase: 'general_desktop' }), distros);
-    const ubuntu = findDistro(results, 'ubuntu-24.04');
+    const ubuntu = findDistro(results, 'ubuntu');
     expect(ubuntu.score).toBe(100);
   });
 
   it('penalizes distros that do not match use case', () => {
     const results = calculateScores(prefs({ useCase: 'server' }), distros);
-    const ubuntu = findDistro(results, 'ubuntu-24.04');
+    const ubuntu = findDistro(results, 'ubuntu');
     // Ubuntu has server use case
     expect(ubuntu.score).toBe(100);
   });
@@ -129,13 +129,13 @@ describe('scoreUseCase', () => {
 describe('scoreDesktopEnvironment', () => {
   it('gives full score for matching DE', () => {
     const results = calculateScores(prefs({ desktopEnvironment: 'gnome' }), distros);
-    const ubuntu = findDistro(results, 'ubuntu-24.04');
+    const ubuntu = findDistro(results, 'ubuntu');
     expect(ubuntu.score).toBe(100);
   });
 
   it('penalizes non-matching DE', () => {
     const results = calculateScores(prefs({ desktopEnvironment: 'pantheon' }), distros);
-    const ubuntu = findDistro(results, 'ubuntu-24.04');
+    const ubuntu = findDistro(results, 'ubuntu');
     // Ubuntu doesn't have Pantheon
     expect(ubuntu.score).toBeLessThan(100);
   });
@@ -151,13 +151,13 @@ describe('scoreDesktopEnvironment', () => {
 describe('scoreReleaseModel', () => {
   it('gives full score for exact match', () => {
     const results = calculateScores(prefs({ releaseModel: 'stable_lts' }), distros);
-    const ubuntu = findDistro(results, 'ubuntu-24.04');
+    const ubuntu = findDistro(results, 'ubuntu');
     expect(ubuntu.score).toBe(100);
   });
 
   it('gives partial score for acceptable match', () => {
     const results = calculateScores(prefs({ releaseModel: 'rolling' }), distros);
-    const ubuntu = findDistro(results, 'ubuntu-24.04');
+    const ubuntu = findDistro(results, 'ubuntu');
     // Ubuntu is stable_lts, rolling accepts rolling + semi_rolling, not stable_lts
     expect(ubuntu.score).toBeLessThan(100);
   });
@@ -166,13 +166,13 @@ describe('scoreReleaseModel', () => {
 describe('scorePackageManager', () => {
   it('gives full score for exact match', () => {
     const results = calculateScores(prefs({ packageManager: 'apt' }), distros);
-    const ubuntu = findDistro(results, 'ubuntu-24.04');
+    const ubuntu = findDistro(results, 'ubuntu');
     expect(ubuntu.score).toBe(100);
   });
 
   it('gives partial score for non-match', () => {
     const results = calculateScores(prefs({ packageManager: 'pacman' }), distros);
-    const ubuntu = findDistro(results, 'ubuntu-24.04');
+    const ubuntu = findDistro(results, 'ubuntu');
     expect(ubuntu.score).toBeLessThan(100);
   });
 });
@@ -180,8 +180,8 @@ describe('scorePackageManager', () => {
 describe('scorePrivacyLevel', () => {
   it('prioritizes privacy-focused distros for extreme privacy', () => {
     const results = calculateScores(prefs({ privacyLevel: 'extreme' }), distros);
-    const tails = findDistro(results, 'tails-6');
-    const ubuntu = findDistro(results, 'ubuntu-24.04');
+    const tails = findDistro(results, 'tails');
+    const ubuntu = findDistro(results, 'ubuntu');
     expect(tails.score).toBeGreaterThan(ubuntu.score);
   });
 
@@ -197,13 +197,13 @@ describe('scoreLearningGoal', () => {
   it('prioritizes rolling distros for learning goal', () => {
     const results = calculateScores(prefs({ learningGoal: 'learning' }), distros);
     const arch = findDistro(results, 'arch-linux');
-    const ubuntu = findDistro(results, 'ubuntu-24.04');
+    const ubuntu = findDistro(results, 'ubuntu');
     expect(arch.score).toBeGreaterThan(ubuntu.score);
   });
 
   it('prioritizes stable LTS for productivity goal', () => {
     const results = calculateScores(prefs({ learningGoal: 'productivity' }), distros);
-    const ubuntu = findDistro(results, 'ubuntu-24.04');
+    const ubuntu = findDistro(results, 'ubuntu');
     const arch = findDistro(results, 'arch-linux');
     expect(ubuntu.score).toBeGreaterThanOrEqual(arch.score);
   });
@@ -376,7 +376,7 @@ describe('score normalization (bug fix verification)', () => {
       privacyLevel: 'casual',
       learningGoal: 'productivity',
     }, distros);
-    const ubuntu = findDistro(results, 'ubuntu-24.04');
+    const ubuntu = findDistro(results, 'ubuntu');
     expect(ubuntu.score).toBeGreaterThanOrEqual(90);
   });
 });
