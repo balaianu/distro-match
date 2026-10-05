@@ -452,7 +452,7 @@
   {
     "id": "mx-linux",
     "name": "MX Linux",
-    "version": "25.2",
+    "version": "25.3",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "old_hardware"],
     "min_ram_gb": 2,
@@ -552,7 +552,7 @@
   {
     "id": "antix",
     "name": "antiX",
-    "version": "26",
+    "version": "26.1",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["old_hardware", "general_desktop"],
     "min_ram_gb": 0.5,
@@ -952,7 +952,7 @@
   {
     "id": "alpine-linux",
     "name": "Alpine Linux",
-    "version": "3.24.1",
+    "version": "3.24.2",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["server", "old_hardware"],
     "min_ram_gb": 0.3,
@@ -977,7 +977,7 @@
   {
     "id": "tails",
     "name": "Tails",
-    "version": "7.10.1",
+    "version": "7.14",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["privacy", "security"],
     "min_ram_gb": 2,
@@ -1002,7 +1002,7 @@
   {
     "id": "qubes-os",
     "name": "Qubes OS",
-    "version": "4.3.1",
+    "version": "4.3.2",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["security", "privacy"],
     "min_ram_gb": 8,
@@ -1027,7 +1027,7 @@
   {
     "id": "parrot-os",
     "name": "Parrot OS",
-    "version": "7.3",
+    "version": "7.4",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["security", "penetration_testing", "privacy"],
     "min_ram_gb": 2,
@@ -1402,7 +1402,7 @@
   {
     "id": "raspberry-pi-os",
     "name": "Raspberry Pi OS",
-    "version": "6.2 Trixie",
+    "version": "6.3 Trixie",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "development", "server"],
     "min_ram_gb": 0.5,
@@ -1427,7 +1427,7 @@
   {
     "id": "nitrux",
     "name": "Nitrux",
-    "version": "6.0",
+    "version": "7.0",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "development"],
     "min_ram_gb": 4,
@@ -1552,7 +1552,7 @@
   {
     "id": "openmediavault",
     "name": "OpenMediaVault",
-    "version": "8.5.5",
+    "version": "8.5.10",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["server", "nas"],
     "min_ram_gb": 1,
