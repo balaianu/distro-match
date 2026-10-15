@@ -327,7 +327,7 @@
   {
     "id": "kali-linux",
     "name": "Kali Linux",
-    "version": "2026.2",
+    "version": "2026.3",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["security", "penetration_testing"],
     "min_ram_gb": 2,
@@ -977,7 +977,7 @@
   {
     "id": "tails",
     "name": "Tails",
-    "version": "7.14",
+    "version": "7.15",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["privacy", "security"],
     "min_ram_gb": 2,
