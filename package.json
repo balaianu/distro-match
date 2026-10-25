@@ -41,7 +41,7 @@
   "author": "Andrei Balaianu",
   "license": "MIT",
   "devDependencies": {
-    "vitest": "^4.1.11",
+    "vitest": "^4.1.12",
     "wrangler": "^4.146.0"
   }
 }
