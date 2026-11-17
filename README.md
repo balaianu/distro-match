@@ -17,7 +17,7 @@ A guided wizard that helps users find the perfect Linux distribution based on th
 ## ✨ Features
 
 - **Smart Recommendations** - Weighted scoring algorithm matches users to suitable Linux distributions
-- **Guided Wizard** - Step-by-step questionnaire with 10 decision points
+- **Guided Wizard** - Step-by-step questionnaire with 12 decision points
 - **Hardware-Aware** - Filters distros based on RAM, CPU architecture, and disk space
 - **Distro Database** - Comprehensive database of popular Linux distributions
 - **Responsive Design** - Works seamlessly on desktop, tablet, and mobile devices
@@ -28,7 +28,7 @@ A guided wizard that helps users find the perfect Linux distribution based on th
 
 ### Prerequisites
 
-- Node.js 18.x or higher
+- Node.js 22.x or higher
 - npm or yarn
 
 ### Installation
@@ -58,7 +58,7 @@ The built files will be in the `dist/` directory.
 ## � Usage
 
 1. **Start the Wizard** - Click "Find Your Perfect Match" to begin
-2. **Answer Questions** - Provide your preferences across 10 categories
+2. **Answer Questions** - Provide your preferences across 12 categories
 3. **Get Recommendations** - Receive personalized distro recommendations with match percentages
 4. **Explore Details** - View detailed information about each recommended distribution
 
@@ -126,8 +126,8 @@ See [Contributing Guidelines](docs/CONTRIBUTING.md) for detailed schema informat
 
 ## 🛠️ Tech Stack
 
-- **Framework**: [Astro](https://astro.build) 5.x
-- **Styling**: [Tailwind CSS](https://tailwindcss.com) 3.x
+- **Framework**: [Astro](https://astro.build) 7.x
+- **Styling**: [Tailwind CSS](https://tailwindcss.com) 4.x
 - **JavaScript**: Vanilla ES6+
 - **Architecture**: Static HTML/CSS/JS with client-side processing
 

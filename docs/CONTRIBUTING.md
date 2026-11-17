@@ -13,7 +13,7 @@ Thank you for your interest in contributing to DistroMatch! This document provid
 
 ### Prerequisites
 
-- Node.js 18.x or higher
+- Node.js 22.x or higher
 - npm or yarn
 - Git
 - Basic knowledge of HTML, CSS, and JavaScript

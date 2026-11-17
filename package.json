@@ -20,8 +20,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.3.1",
     "astro": "^7.4.7",
-    "tailwindcss": "^4.3.1",
-    "twemoji": "^14.0.2"
+    "tailwindcss": "^4.3.1"
   },
   "keywords": [
     "linux distro selector",

@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { questions, emojiToImg } from '../scripts/wizard-state.js';
+import { questions } from '../scripts/wizard-state.js';
 import distros from '../data/distros.json';
 ---
 
@@ -47,88 +47,11 @@ import distros from '../data/distros.json';
     scoreLearningGoal,
     scoreHardwareType,
   } from '../scripts/recommendation-algorithm.js';
+  import { emojiToImg } from '../scripts/wizard-state.js';
 
   // Read data from the JSON script tag
   const wizardData = JSON.parse(document.getElementById('wizard-data').textContent);
   const { questions, distros } = wizardData;
-
-  // Emoji to code point mapping for PNG images
-  const emojiMap = {
-    '🐧': '1f427',
-    '✨': '2728',
-    '⚠️': '26a0',
-    '🔍': '1f50d',
-    '🔒': '1f512',
-    '🧭': '1f9ad',
-    '📚': '1f4da',
-    '⚡': '26a1',
-    '🤝': '1f91d',
-    '🚀': '1f680',
-    '🌱': '1f331',
-    '🌿': '1f33f',
-    '🌳': '1f334',
-    '🌲': '1f332',
-    '🖥️': '1f5a5',
-    '💻': '1f4bb',
-    '🖧': '1f5a7',
-    '🎮': '1f3ae',
-    '🎨': '1f3a8',
-    '🤔': '1f914',
-    '📉': '1f4c9',
-    '📊': '1f4ca',
-    '📈': '1f4c8',
-    '❓': '2753',
-    '💾': '1f4be',
-    '💿': '1f4bf',
-    '📀': '1f4c0',
-    '💽': '1f4bd',
-    '🍓': '1f353',
-    '☁️': '2601',
-    '🎯': '1f3af',
-    '🔷': '1f537',
-    '💠': '1f4a0',
-    '🔸': '1f538',
-    '🟢': '1f534',
-    '🟤': '1f7e4',
-    '🍎': '1f34e',
-    '🪟': '1fa9f',
-    '🟣': '1f7e3',
-    '🏛️': '1f3db',
-    '🔄': '1f504',
-    '📅': '1f4c5',
-    '📦': '1f4e6',
-    '📥': '1f4e5',
-    '🎁': '1f381',
-    '⚙️': '2699',
-    '👥': '1f465',
-    '💼': '1f4bc',
-    '🚶': '1f6b6',
-    '🆓': '1f193',
-    '🦅': '1f985',
-    '🏢': '1f3e2',
-    '🔐': '1f510',
-    '🛡️': '1f6e1',
-    '⚖️': '2696',
-    '🎭': '1f3ad',
-    '☑️': '2611',
-    '💡': '1f4a1',
-    '🎉': '1f389',
-    '📋': '1f4cb',
-    '🖼️': '1f5bc',
-    '🥇': '1f947',
-    '🥈': '1f948',
-    '🥉': '1f949',
-    '☕': '2615'
-  };
-
-  // Convert emoji to img tag
-  function emojiToImg(emoji) {
-    const codePoint = emojiMap[emoji];
-    if (codePoint) {
-      return `<img src="/emojis/${codePoint}.png" alt="${emoji}" class="emoji-img" loading="lazy">`;
-    }
-    return emoji; // Return original emoji if no mapping found
-  }
 
   // Wizard state
   const wizardState = {
@@ -215,8 +138,6 @@ import distros from '../data/distros.json';
     if (preferences.philosophy && preferences.philosophy !== 'no_preference') {
       if (preferences.philosophy === 'free_software' && distro.philosophy === 'user_freedom') {
         parts.push('committed to free software principles');
-      } else if (preferences.philosophy === 'privacy' && distro.philosophy === 'user_freedom') {
-        parts.push('privacy-respecting by design');
       }
     }
     
@@ -413,16 +334,6 @@ import distros from '../data/distros.json';
       '4_8gb': '4GB - 8GB',
       '8_16gb': '8GB - 16GB',
       gt_16gb: '16GB or more',
-      not_sure: 'Not Sure'
-    };
-    return map[value] || value;
-  }
-
-  function formatCpu(value) {
-    const map = {
-      x86_64: '64-bit Intel/AMD',
-      i386: '32-bit (older systems)',
-      arm64: 'ARM (Raspberry Pi, ARM devices)',
       not_sure: 'Not Sure'
     };
     return map[value] || value;
