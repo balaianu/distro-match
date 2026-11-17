@@ -1,0 +1,7 @@
+/*
+  Link: </sitemap.xml>; rel="sitemap"
+  Link: </about>; rel="about"
+  Link: </distros>; rel="contents"
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
