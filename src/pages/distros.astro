@@ -129,7 +129,7 @@ const philosophies = [...new Set(allDistros.map(d => d.philosophy))].sort();
             data-use-cases={distro.use_cases.join(',')}
             data-philosophy={distro.philosophy}
             data-experience-levels={distro.experience_level.join(',')}
-            style="animation-delay: ${index * 0.05}s"
+            style={`animation-delay: ${index * 0.05}s`}
           >
             <div class="mb-4 flex items-start justify-between">
               <div>

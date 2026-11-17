@@ -457,6 +457,20 @@ import distros from '../data/distros.json';
     return map[value] || value;
   }
 
+  function formatSupportLevel(value) {
+    const map = {
+      no_preference: 'No Preference',
+      extensive: 'Extensive Community',
+      professional: 'Professional Support',
+      documentation: 'Documentation',
+      minimal: 'Minimal Support'
+    };
+    if (Array.isArray(value)) {
+      return value.map(v => map[v] || v).join(', ');
+    }
+    return map[value] || value;
+  }
+
   function formatReleaseModel(value) {
     const map = {
       no_preference: 'No Preference',
@@ -536,7 +550,7 @@ import distros from '../data/distros.json';
     if (currentQ.multiSelect) {
       return !currentQ.required || selectedOptions.length > 0;
     } else {
-      return selectedOption !== '';
+      return selectedOption !== '' || !currentQ.required;
     }
   }
 
@@ -619,7 +633,7 @@ import distros from '../data/distros.json';
     if (currentQ.subStep) {
       setPreference(currentQ.id, selectedOption || null);
     } else {
-      setPreference(currentQ.id, currentQ.multiSelect ? selectedOptions : selectedOption || null);
+      setPreference(currentQ.id, currentQ.multiSelect ? (selectedOptions.length > 0 ? selectedOptions : null) : selectedOption || null);
     }
     
     previousStep = wizardState.currentStep;
@@ -647,6 +661,8 @@ import distros from '../data/distros.json';
 
   function handleSkip() {
     if (canSkipStep()) {
+      selectedOption = '';
+      selectedOptions = [];
       handleNext();
     }
   }
@@ -673,6 +689,9 @@ import distros from '../data/distros.json';
     showResults = false;
     recommendations = [];
     selectedOption = '';
+    selectedOptions = [];
+    previousStep = -1;
+    currentQuestionId = null;
     hasStarted = false;
     render();
   }
@@ -934,6 +953,10 @@ import distros from '../data/distros.json';
       // Cleanup keyboard listener on re-render
       window.currentKeyboardHandler = handleKeyboard;
     } else {
+      if (window.currentKeyboardHandler) {
+        document.removeEventListener('keydown', window.currentKeyboardHandler);
+        window.currentKeyboardHandler = null;
+      }
       let html = `
         <div class="content-frame-narrow">
         <div class="text-center mb-10 animate-fade-in">
@@ -961,6 +984,7 @@ import distros from '../data/distros.json';
             ${wizardState.preferences.desktopEnvironment ? `<span class="inline-flex items-center rounded-full border border-blue-500/30 bg-blue-500/10 px-2 py-1 text-blue-200"><span class="mr-1.5">🖼️</span>${formatDesktopEnvironment(wizardState.preferences.desktopEnvironment)}</span>` : ''}
             ${wizardState.preferences.releaseModel ? `<span class="inline-flex items-center rounded-full border border-purple-500/30 bg-purple-500/10 px-2 py-1 text-purple-200"><span class="mr-1.5">🔄</span>${formatReleaseModel(wizardState.preferences.releaseModel)}</span>` : ''}
             ${wizardState.preferences.packageManager ? `<span class="inline-flex items-center rounded-full border border-teal-500/30 bg-teal-500/10 px-2 py-1 text-teal-200"><span class="mr-1.5">📦</span>${formatPackageManager(wizardState.preferences.packageManager)}</span>` : ''}
+            ${wizardState.preferences.supportLevel ? `<span class="inline-flex items-center rounded-full border border-sky-500/30 bg-sky-500/10 px-2 py-1 text-sky-200"><span class="mr-1.5">👥</span>${formatSupportLevel(wizardState.preferences.supportLevel)}</span>` : ''}
             ${wizardState.preferences.privacyLevel ? `<span class="inline-flex items-center rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2 py-1 text-indigo-200"><span class="mr-1.5">🔒</span>${formatPrivacyLevel(wizardState.preferences.privacyLevel)}</span>` : ''}
             ${wizardState.preferences.learningGoal ? `<span class="inline-flex items-center rounded-full border border-orange-500/30 bg-orange-500/10 px-2 py-1 text-orange-200"><span class="mr-1.5">📚</span>${formatLearningGoal(wizardState.preferences.learningGoal)}</span>` : ''}
             ${wizardState.preferences.philosophy ? `<span class="inline-flex items-center rounded-full border border-pink-500/30 bg-pink-500/10 px-2 py-1 text-pink-200"><span class="mr-1.5">🦅</span>${formatPhilosophy(wizardState.preferences.philosophy)}</span>` : ''}
