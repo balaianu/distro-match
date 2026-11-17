@@ -27,7 +27,7 @@ function prefs(overrides = {}) {
 describe('calculateScores', () => {
   it('returns a score for every distro in the database', () => {
     const results = calculateScores(prefs(), distros);
-    expect(results.length).toBe(63);
+    expect(results.length).toBe(distros.length);
     results.forEach(d => {
       expect(d.score).toBeGreaterThanOrEqual(0);
       expect(d.score).toBeLessThanOrEqual(100);

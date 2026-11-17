@@ -22,7 +22,7 @@
     "download_page": "https://ubuntu.com/download/desktop",
     "strengths": ["Largest community support", "Extensive documentation", "Long-term support (5 years)", "Wide software availability", "Beginner-friendly"],
     "weaknesses": ["Default GNOME may not suit all users", "Some proprietary software included", "Snaps can be slower than native packages"],
-    "similar_distros": ["linux_mint", "pop_os", "zorin_os"]
+    "similar_distros": ["linux-mint", "pop-os", "zorin-os"]
   },
   {
     "id": "kubuntu",
@@ -47,7 +47,7 @@
     "download_page": "https://kubuntu.org/download/",
     "strengths": ["KDE Plasma desktop", "Highly customizable", "Ubuntu stability", "Good for KDE users", "LTS support"],
     "weaknesses": ["Heavier than other Ubuntu flavors", "KDE learning curve", "Smaller community than main Ubuntu"],
-    "similar_distros": ["ubuntu", "kde_neon", "fedora_kde"]
+    "similar_distros": ["ubuntu", "kde-neon", "fedora-kde"]
   },
   {
     "id": "ubuntu-mate",
@@ -72,7 +72,7 @@
     "download_page": "https://ubuntu-mate.org/download/",
     "strengths": ["Traditional desktop layout", "Lightweight", "Good for older hardware", "Ubuntu stability", "MATE desktop"],
     "weaknesses": ["Less modern than GNOME", "Smaller software selection", "Not as polished as Mint"],
-    "similar_distros": ["linux_mint", "xubuntu", "fedora_mate"]
+    "similar_distros": ["linux-mint", "xubuntu"]
   },
   {
     "id": "ubuntu-budgie",
@@ -97,7 +97,7 @@
     "download_page": "https://ubuntubudgie.org/downloads/",
     "strengths": ["Budgie desktop", "Simple and elegant", "Ubuntu stability", "Good performance", "Modern design"],
     "weaknesses": ["Smaller community", "Less customization than KDE", "Newer desktop environment"],
-    "similar_distros": ["solus", "ubuntu", "elementary_os"]
+    "similar_distros": ["solus", "ubuntu", "elementary-os"]
   },
   {
     "id": "ubuntu-studio",
@@ -122,7 +122,7 @@
     "download_page": "https://ubuntustudio.org/download/",
     "strengths": ["Pre-installed creative tools", "Real-time kernel", "Audio/video optimized", "KDE Plasma desktop", "Ubuntu stability"],
     "weaknesses": ["Heavy resource requirements", "Specialized use case", "Not for general users"],
-    "similar_distros": ["fedora_design_suite", "kubuntu", "av_linux"]
+    "similar_distros": ["kubuntu"]
   },
   {
     "id": "linux-mint",
@@ -146,8 +146,8 @@
     "official_website": "https://linuxmint.com",
     "download_page": "https://linuxmint.com/download.php",
     "strengths": ["Very beginner-friendly", "Traditional desktop layout", "Excellent out-of-box experience", "Multimedia codecs included", "Stable and reliable"],
-    "weaknesses": "Based on Ubuntu (inherits Ubuntu's choices), Less cutting-edge software",
-    "similar_distros": ["ubuntu", "zorin_os", "elementary_os"]
+    "weaknesses": ["Based on Ubuntu (inherits Ubuntu's choices)", "Less cutting-edge software"],
+    "similar_distros": ["ubuntu", "zorin-os", "elementary-os"]
   },
   {
     "id": "zorin-os",
@@ -172,7 +172,7 @@
     "download_page": "https://zorin.com/os/download/",
     "strengths": ["Windows/macOS-like layouts", "Excellent for Windows migrants", "Beautiful UI", "Good hardware support", "Zorin Connect for phone integration"],
     "weaknesses": ["Pro version costs money", "Smaller community than Ubuntu/Mint"],
-    "similar_distros": ["ubuntu", "linux_mint", "elementary_os"]
+    "similar_distros": ["ubuntu", "linux-mint", "elementary-os"]
   },
   {
     "id": "pop-os",
@@ -222,7 +222,7 @@
     "download_page": "https://elementary.io/os/download",
     "strengths": ["Beautiful macOS-like design", "Curated AppCenter", "Privacy-focused", "Consistent UX", "Good performance on modest hardware"],
     "weaknesses": ["Limited customization", "Smaller software repository", "Paid apps in AppCenter"],
-    "similar_distros": ["ubuntu", "zorin_os", "linux_mint"]
+    "similar_distros": ["ubuntu", "zorin-os", "linux-mint"]
   },
   {
     "id": "fedora",
@@ -247,7 +247,7 @@
     "download_page": "https://fedoraproject.org/workstation/download/",
     "strengths": ["Latest software", "Clean system", "Upstream-first philosophy", "Excellent for developers", "RHEL preview"],
     "weaknesses": ["6-month release cycle", "Less stable than LTS distros", "No proprietary codecs by default"],
-    "similar_distros": ["rhel", "centos_stream", "opensuse"]
+    "similar_distros": ["rhel", "centos-stream"]
   },
   {
     "id": "debian",
@@ -258,7 +258,7 @@
     "min_ram_gb": 2,
     "recommended_ram_gb": 4,
     "min_disk_gb": 10,
-    "cpu_architecture": ["x86_64", "arm64", "i386"],
+    "cpu_architecture": ["x86_64", "arm64"],
     "desktop_environments": ["GNOME", "XFCE", "KDE Plasma", "MATE", "Cinnamon", "LXQt"],
     "release_model": "stable_lts",
     "package_manager": "apt",
@@ -272,7 +272,7 @@
     "download_page": "https://www.debian.org/distrib/",
     "strengths": ["Extremely stable", "Huge software repository", "100% free software option", "Base for many distros", "Excellent documentation"],
     "weaknesses": ["Older software in stable branch", "Less beginner-friendly than Ubuntu", "Manual configuration often needed"],
-    "similar_distros": ["ubuntu", "linux_mint", "mx_linux"]
+    "similar_distros": ["ubuntu", "linux-mint", "mx-linux"]
   },
   {
     "id": "arch-linux",
@@ -283,7 +283,7 @@
     "min_ram_gb": 2,
     "recommended_ram_gb": 4,
     "min_disk_gb": 20,
-    "cpu_architecture": ["x86_64", "arm64"],
+    "cpu_architecture": ["x86_64"],
     "desktop_environments": ["Any"],
     "release_model": "rolling",
     "package_manager": "pacman",
@@ -297,7 +297,7 @@
     "download_page": "https://archlinux.org/download/",
     "strengths": ["Rolling release (always latest)", "AUR (huge software repository)", "Excellent documentation (Arch Wiki)", "Minimal and clean", "Highly customizable"],
     "weaknesses": ["Manual installation required", "Not beginner-friendly", "Requires maintenance", "Can break if not updated carefully"],
-    "similar_distros": ["manjaro", "endeavouros", "garuda_linux"]
+    "similar_distros": ["manjaro", "endeavouros", "garuda-linux"]
   },
   {
     "id": "manjaro",
@@ -322,7 +322,7 @@
     "download_page": "https://manjaro.org/download/",
     "strengths": ["Easy Arch experience", "AUR access", "Graphical installer", "Multiple desktop environments", "Good hardware detection"],
     "weaknesses": ["Less stable than Debian/Ubuntu", "Occasional update issues", "Smaller community than Arch"],
-    "similar_distros": ["arch_linux", "endeavouros", "garuda_linux"]
+    "similar_distros": ["arch-linux", "endeavouros", "garuda-linux"]
   },
   {
     "id": "kali-linux",
@@ -347,7 +347,7 @@
     "download_page": "https://www.kali.org/get-kali/",
     "strengths": ["Pre-installed security tools", "Active development", "Good documentation", "Multiple desktop options", "Wireless attacks support"],
     "weaknesses": ["Not for daily use", "Requires security knowledge", "Root user by default (security risk)", "Not beginner-friendly"],
-    "similar_distros": ["parrot_os", "blackarch"]
+    "similar_distros": ["parrot-os"]
   },
   {
     "id": "lubuntu",
@@ -358,7 +358,7 @@
     "min_ram_gb": 1,
     "recommended_ram_gb": 2,
     "min_disk_gb": 10,
-    "cpu_architecture": ["x86_64", "i386"],
+    "cpu_architecture": ["x86_64"],
     "desktop_environments": ["LXQt"],
     "release_model": "stable_lts",
     "package_manager": "apt",
@@ -372,7 +372,7 @@
     "download_page": "https://lubuntu.me/downloads/",
     "strengths": ["Very lightweight", "Runs on old hardware", "Low resource usage", "Simple and clean", "LTS support"],
     "weaknesses": ["Limited features", "Less polished than main Ubuntu", "Smaller software selection"],
-    "similar_distros": ["xubuntu", "linux_lite", "antiX"]
+    "similar_distros": ["xubuntu", "linux-lite"]
   },
   {
     "id": "xubuntu",
@@ -397,7 +397,7 @@
     "download_page": "https://xubuntu.org/download/",
     "strengths": ["Lightweight but full-featured", "XFCE is highly customizable", "Stable and reliable", "Good for older hardware", "LTS support"],
     "weaknesses": ["Less modern looking", "Smaller community than main Ubuntu"],
-    "similar_distros": ["lubuntu", "linux_mint_xfce", "fedora_xfce"]
+    "similar_distros": ["lubuntu", "fedora-xfce"]
   },
   {
     "id": "opensuse-tumbleweed",
@@ -422,7 +422,7 @@
     "download_page": "https://get.opensuse.org/tumbleweed/",
     "strengths": ["Btrfs with snapshots", "YaST configuration tool", "Rolling release", "Good for servers", "Enterprise backing"],
     "weaknesses": ["Smaller community than Ubuntu/Fedora", "Less software than Arch", "Complex for beginners"],
-    "similar_distros": ["fedora", "opensuse_leap", "rhel"]
+    "similar_distros": ["fedora", "opensuse-leap", "rhel"]
   },
   {
     "id": "opensuse-leap",
@@ -447,7 +447,7 @@
     "download_page": "https://get.opensuse.org/leap/",
     "strengths": ["Enterprise-grade stability", "Btrfs with snapshots", "YaST configuration tool", "Binary compatible with SLE", "Good for servers"],
     "weaknesses": ["Older software than Tumbleweed", "Smaller community", "Less cutting-edge"],
-    "similar_distros": ["rhel", "centos_stream", "fedora"]
+    "similar_distros": ["rhel", "centos-stream", "fedora"]
   },
   {
     "id": "mx-linux",
@@ -472,7 +472,7 @@
     "download_page": "https://mxlinux.org/download-links/",
     "strengths": ["MX Tools suite", "Excellent for old hardware", "Debian stability", "Snapshot tools", "Good community"],
     "weaknesses": ["Smaller software repo than Ubuntu", "Less frequent updates", "Not as beginner-friendly as Mint"],
-    "similar_distros": ["linux_mint", "antiX", "debian"]
+    "similar_distros": ["linux-mint", "debian"]
   },
   {
     "id": "deepin",
@@ -497,7 +497,7 @@
     "download_page": "https://www.deepin.org/en/download/",
     "strengths": ["Beautiful macOS-like UI", "Excellent out-of-box experience", "Good for beginners", "DDE desktop", "Chinese backing"],
     "weaknesses": ["Some privacy concerns", "Heavier resource usage", "Less customizable"],
-    "similar_distros": ["elementary_os", "zorin_os", "ubuntu"]
+    "similar_distros": ["elementary-os", "zorin-os", "ubuntu"]
   },
   {
     "id": "peppermint-os",
@@ -522,7 +522,7 @@
     "download_page": "https://peppermintos.com/downloads/",
     "strengths": ["Very lightweight", "Cloud app integration", "Fast performance", "Good for old hardware", "Simple interface"],
     "weaknesses": ["Smaller community", "Less features", "Basic desktop"],
-    "similar_distros": ["lubuntu", "xubuntu", "linux_lite"]
+    "similar_distros": ["lubuntu", "xubuntu", "linux-lite"]
   },
   {
     "id": "linux-lite",
@@ -547,7 +547,7 @@
     "download_page": "https://linuxliteos.com/download.php",
     "strengths": ["Very beginner-friendly", "Windows-like interface", "Lightweight", "Good documentation", "Ubuntu-based"],
     "weaknesses": ["Smaller community", "Limited software", "Simple desktop"],
-    "similar_distros": ["lubuntu", "zorin_os", "linux_mint"]
+    "similar_distros": ["lubuntu", "zorin-os", "linux-mint"]
   },
   {
     "id": "antix",
@@ -572,7 +572,7 @@
     "download_page": "https://antixlinux.com/mirrors/",
     "strengths": ["Extremely lightweight", "Runs on very old hardware", "No systemd", "antiX Magic tools", "Fast performance"],
     "weaknesses": ["Not beginner-friendly", "Limited software", "Basic desktops", "Smaller community"],
-    "similar_distros": ["lubuntu", "puppy_linux", "tiny_core"]
+    "similar_distros": ["lubuntu", "puppy-linux"]
   },
   {
     "id": "endeavouros",
@@ -597,7 +597,7 @@
     "download_page": "https://endeavouros.com/download/",
     "strengths": ["Easy Arch installation", "Multiple DE options", "Arch-based", "Good documentation", "Active community"],
     "weaknesses": ["Less stable than Debian/Ubuntu", "Arch maintenance required", "Smaller than Manjaro"],
-    "similar_distros": ["arch_linux", "manjaro", "garuda_linux"]
+    "similar_distros": ["arch-linux", "manjaro", "garuda-linux"]
   },
   {
     "id": "garuda-linux",
@@ -622,7 +622,7 @@
     "download_page": "https://garudalinux.org/downloads/",
     "strengths": ["Beautiful themes", "Gaming optimizations", "Chalet-AUR helper", "Multiple editions", "Performance tuned"],
     "weaknesses": ["Heavier than base Arch", "Gaming focus not for everyone", "Smaller community"],
-    "similar_distros": ["arch_linux", "manjaro", "endeavouros"]
+    "similar_distros": ["arch-linux", "manjaro", "endeavouros"]
   },
   {
     "id": "arcolinux",
@@ -647,12 +647,12 @@
     "download_page": "https://arcolinux.com/arco-isos/",
     "strengths": ["Highly customizable", "Educational focus", "Many DE options", "Good documentation", "Arch-based"],
     "weaknesses": ["Learning curve", "Less stable than LTS distros", "Smaller community"],
-    "similar_distros": ["arch_linux", "manjaro", "endeavouros"]
+    "similar_distros": ["arch-linux", "manjaro", "endeavouros"]
   },
   {
     "id": "fedora-kde",
     "name": "Fedora KDE",
-    "version": "44 Spin",
+    "version": "44",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["general_desktop", "development"],
     "min_ram_gb": 4,
@@ -672,12 +672,12 @@
     "download_page": "https://spins.fedoraproject.org/kde/download/",
     "strengths": ["KDE Plasma desktop", "Latest software", "Fedora stability", "Customizable", "Good for developers"],
     "weaknesses": ["6-month release cycle", "Heavier than XFCE spin", "Less stable than LTS"],
-    "similar_distros": ["kubuntu", "kde_neon", "opensuse"]
+    "similar_distros": ["kubuntu", "kde-neon"]
   },
   {
     "id": "fedora-xfce",
     "name": "Fedora XFCE",
-    "version": "44 Spin",
+    "version": "44",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "old_hardware"],
     "min_ram_gb": 2,
@@ -697,7 +697,7 @@
     "download_page": "https://spins.fedoraproject.org/xfce/download/",
     "strengths": ["Lightweight", "XFCE desktop", "Fedora cutting-edge", "Good for old hardware", "Stable"],
     "weaknesses": ["6-month release cycle", "Less features than GNOME spin", "Smaller community"],
-    "similar_distros": ["xubuntu", "fedora", "linux_mint_xfce"]
+    "similar_distros": ["xubuntu", "fedora"]
   },
   {
     "id": "nobara-linux",
@@ -722,7 +722,7 @@
     "download_page": "https://nobaraproject.org/download/",
     "strengths": ["Gaming optimizations", "Content creation tools", "Fedora-based", "Proton/Wine included", "Beautiful themes"],
     "weaknesses": ["Gaming focus not for everyone", "Smaller community than Fedora", "Heavier resource usage"],
-    "similar_distros": ["pop_os", "fedora", "garuda_linux"]
+    "similar_distros": ["pop-os", "fedora", "garuda-linux"]
   },
   {
     "id": "rhel",
@@ -747,7 +747,7 @@
     "download_page": "https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux/download",
     "strengths": ["Enterprise support", "Long-term support (10 years)", "Certified for enterprise", "Security features", "Extensive documentation"],
     "weaknesses": ["Subscription required", "Not for desktop use", "Older software", "Corporate focus"],
-    "similar_distros": ["rocky_linux", "almalinux", "centos_stream"]
+    "similar_distros": ["rocky-linux", "almalinux", "centos-stream"]
   },
   {
     "id": "rocky-linux",
@@ -772,7 +772,7 @@
     "download_page": "https://rockylinux.org/download/",
     "strengths": ["RHEL compatible", "Free and open source", "Enterprise-grade", "Long-term support", "Good community"],
     "weaknesses": ["Not for desktop use", "Older software", "Server-focused", "Smaller than RHEL"],
-    "similar_distros": ["rhel", "almalinux", "centos_stream"]
+    "similar_distros": ["rhel", "almalinux", "centos-stream"]
   },
   {
     "id": "almalinux",
@@ -797,7 +797,7 @@
     "download_page": "https://almalinux.org/get-almalinux/",
     "strengths": ["RHEL compatible", "Non-profit governance", "Free and open source", "Enterprise-grade", "Long-term support"],
     "weaknesses": ["Not for desktop use", "Older software", "Server-focused", "Smaller than RHEL"],
-    "similar_distros": ["rhel", "rocky_linux", "centos_stream"]
+    "similar_distros": ["rhel", "rocky-linux", "centos-stream"]
   },
   {
     "id": "centos-stream",
@@ -822,7 +822,7 @@
     "download_page": "https://www.centos.org/download/",
     "strengths": ["RHEL preview", "Rolling release", "Free", "Enterprise features", "Good for testing"],
     "weaknesses": ["Not for production servers", "Not stable like RHEL", "Rolling can break", "Not for desktop use"],
-    "similar_distros": ["rhel", "fedora", "rocky_linux"]
+    "similar_distros": ["rhel", "fedora", "rocky-linux"]
   },
   {
     "id": "solus",
@@ -847,7 +847,7 @@
     "download_page": "https://getsol.us/download/",
     "strengths": ["Budgie desktop origin", "Curated software", "Beautiful design", "Rolling but stable", "Good performance"],
     "weaknesses": ["Smaller software repo", "Smaller community", "Less popular", "Independent development"],
-    "similar_distros": ["ubuntu_budgie", "fedora", "manjaro"]
+    "similar_distros": ["ubuntu-budgie", "fedora", "manjaro"]
   },
   {
     "id": "nixos",
@@ -872,7 +872,7 @@
     "download_page": "https://nixos.org/download.html",
     "strengths": ["Declarative configuration", "Atomic upgrades", "Reproducible builds", "Rollback capability", "Excellent documentation"],
     "weaknesses": ["Steep learning curve", "Not beginner-friendly", "Different package system", "Smaller community"],
-    "similar_distros": ["guix", "arch_linux", "gentoo"]
+    "similar_distros": ["arch-linux", "gentoo"]
   },
   {
     "id": "gentoo",
@@ -897,7 +897,7 @@
     "download_page": "https://www.gentoo.org/downloads/",
     "strengths": ["Maximum customization", "Performance optimization", "Source-based", "Excellent documentation", "Educational"],
     "weaknesses": ["Expert only", "Long compile times", "Not beginner-friendly", "High maintenance"],
-    "similar_distros": ["funtoo", "arch_linux", "slackware"]
+    "similar_distros": ["arch-linux", "slackware"]
   },
   {
     "id": "slackware",
@@ -922,7 +922,7 @@
     "download_page": "https://www.slackware.com/getslack/",
     "strengths": ["Most traditional Unix-like", "Very stable", "Simple and clean", "Educational", "Long history"],
     "weaknesses": ["Expert only", "No dependency resolution", "Manual configuration", "Outdated packages"],
-    "similar_distros": ["vector_linux", "arch_linux", "gentoo"]
+    "similar_distros": ["arch-linux", "gentoo"]
   },
   {
     "id": "void-linux",
@@ -947,7 +947,7 @@
     "download_page": "https://voidlinux.org/download/",
     "strengths": ["Very lightweight", "Fast package manager", "No systemd", "Binary and source", "Rolling release"],
     "weaknesses": ["Smaller community", "Less software than Arch", "Not beginner-friendly", "Minimal documentation"],
-    "similar_distros": ["arch_linux", "alpine_linux", "artix"]
+    "similar_distros": ["arch-linux", "alpine-linux"]
   },
   {
     "id": "alpine-linux",
@@ -972,7 +972,7 @@
     "download_page": "https://alpinelinux.org/downloads/",
     "strengths": ["Extremely lightweight", "Security-focused", "musl libc", "Great for containers", "Simple"],
     "weaknesses": ["Not for beginners", "Limited software (musl)", "Manual configuration", "Not for desktop"],
-    "similar_distros": ["void_linux", "tiny_core", "antiX"]
+    "similar_distros": ["void-linux"]
   },
   {
     "id": "tails",
@@ -983,7 +983,7 @@
     "min_ram_gb": 2,
     "recommended_ram_gb": 4,
     "min_disk_gb": 8,
-    "cpu_architecture": ["x86_64", "i386"],
+    "cpu_architecture": ["x86_64"],
     "desktop_environments": ["GNOME"],
     "release_model": "stable_lts",
     "package_manager": "apt",
@@ -997,7 +997,7 @@
     "download_page": "https://tails.net/install/index.en.html",
     "strengths": ["Privacy-focused", "Tor by default", "Amnesic (no traces)", "Security-focused", "Easy to use"],
     "weaknesses": ["Not for daily use", "Slower over Tor", "Limited software", "Live system only"],
-    "similar_distros": ["qubes_os", "whonix", "kali_linux"]
+    "similar_distros": ["qubes-os", "kali-linux"]
   },
   {
     "id": "qubes-os",
@@ -1022,7 +1022,7 @@
     "download_page": "https://www.qubes-os.org/downloads/",
     "strengths": ["Security by compartmentalization", "Isolates applications", "Whonix integration", "Advanced security", "Open source"],
     "weaknesses": ["High resource requirements", "Complex to use", "Hardware compatibility", "Not for beginners"],
-    "similar_distros": ["tails", "whonix", "kali_linux"]
+    "similar_distros": ["tails", "kali-linux"]
   },
   {
     "id": "parrot-os",
@@ -1047,7 +1047,7 @@
     "download_page": "https://www.parrotsec.org/download/",
     "strengths": ["Security tools pre-installed", "Anonymity tools", "Multiple DE options", "Sandbox features", "Good for daily use"],
     "weaknesses": ["Requires security knowledge", "Not as many tools as Kali", "Smaller community", "Rolling can break"],
-    "similar_distros": ["kali_linux", "blackarch", "tails"]
+    "similar_distros": ["kali-linux", "tails"]
   },
   {
     "id": "kde-neon",
@@ -1072,7 +1072,7 @@
     "download_page": "https://neon.kde.org/download/",
     "strengths": ["Latest KDE software", "Built by KDE team", "Ubuntu base", "Beautiful KDE Plasma", "Regular updates"],
     "weaknesses": ["Rolling can be less stable", "Smaller community than Ubuntu", "KDE-focused only"],
-    "similar_distros": ["kubuntu", "fedora_kde", "manjaro_kde"]
+    "similar_distros": ["kubuntu", "fedora-kde"]
   },
   {
     "id": "trisquel",
@@ -1147,7 +1147,7 @@
     "download_page": "https://sparkylinux.org/download/",
     "strengths": ["Lightweight", "Multiple editions", "Rolling updates available", "Good for old hardware", "Debian-based"],
     "weaknesses": ["Smaller community", "Less stable than stable Debian", "Limited documentation", "Smaller software repo"],
-    "similar_distros": ["antiX", "mx_linux", "debian"]
+    "similar_distros": ["mx-linux", "debian"]
   },
   {
     "id": "artix-linux",
@@ -1172,7 +1172,7 @@
     "download_page": "https://artixlinux.org/download.php",
     "strengths": ["No systemd", "Arch-based", "Multiple init systems", "Rolling release", "Lightweight"],
     "weaknesses": ["Not beginner-friendly", "Smaller community than Arch", "Manual configuration", "Requires maintenance"],
-    "similar_distros": ["arch_linux", "void_linux", "gentoo"]
+    "similar_distros": ["arch-linux", "void-linux", "gentoo"]
   },
   {
     "id": "rosa-linux",
@@ -1197,7 +1197,7 @@
     "download_page": "https://www.rosalinux.ru/en/download/",
     "strengths": ["Long-term support", "Multiple DE options", "Russian localization", "Good for enterprise", "RPM-based"],
     "weaknesses": ["Smaller international community", "Russian-focused", "Less software than Fedora", "Documentation mostly in Russian"],
-    "similar_distros": ["fedora", "opensuse", "rhel"]
+    "similar_distros": ["fedora", "rhel"]
   },
   {
     "id": "puppy-linux",
@@ -1222,7 +1222,7 @@
     "download_page": "https://puppylinux.com/download/",
     "strengths": ["Extremely lightweight", "Runs in RAM", "Live CD/USB", "Good for old hardware", "Fast boot"],
     "weaknesses": ["Not for daily use", "Limited software", "Basic desktops", "Learning curve"],
-    "similar_distros": ["tiny_core", "antiX", "slitaz"]
+    "similar_distros": ["slitaz"]
   },
   {
     "id": "tiny-core-linux",
@@ -1247,7 +1247,7 @@
     "download_page": "https://tinycorelinux.net/downloads.html",
     "strengths": ["Smallest Linux distro", "Runs on any hardware", "Extensible", "Fast", "Minimalist"],
     "weaknesses": ["Expert only", "Very limited software", "Not for desktop use", "Manual everything"],
-    "similar_distros": ["puppy_linux", "slitaz", "alpine_linux"]
+    "similar_distros": ["puppy-linux", "slitaz", "alpine-linux"]
   },
   {
     "id": "bazzite",
@@ -1272,7 +1272,7 @@
     "download_page": "https://bazzite.gg/download",
     "strengths": ["Atomic updates with rollback", "Gaming-optimized", "Steam Deck support", "Flatpak-first ecosystem", "Cloud-native"],
     "weaknesses": ["Immutable filesystem", "Requires learning new paradigm", "Smaller community than Fedora", "Gaming-focused"],
-    "similar_distros": ["nobara_linux", "fedora_kde", "bluefin"]
+    "similar_distros": ["nobara-linux", "fedora-kde", "bluefin"]
   },
   {
     "id": "bluefin",
@@ -1297,7 +1297,7 @@
     "download_page": "https://projectbluefin.io/download",
     "strengths": ["Atomic updates with rollback", "Cloud-native development", "Near-zero maintenance", "Developer-focused", "Chromebook-like reliability"],
     "weaknesses": ["Immutable filesystem", "Different development paradigm", "GNOME only", "Requires container knowledge"],
-    "similar_distros": ["bazzite", "fedora_workstation", "silverblue"]
+    "similar_distros": ["bazzite"]
   },
   {
     "id": "vanilla-os",
@@ -1322,7 +1322,7 @@
     "download_page": "https://vanillaos.org/download",
     "strengths": ["Immutable with ABroot", "Pure GNOME experience", "Atomic updates", "Rollback capability", "Ubuntu-based"],
     "weaknesses": ["Immutable filesystem", "GNOME only", "Smaller community", "Newer project"],
-    "similar_distros": ["fedora_silverblue", "ubuntu", "bluefin"]
+    "similar_distros": ["ubuntu", "bluefin"]
   },
   {
     "id": "cachyos",
@@ -1347,12 +1347,12 @@
     "download_page": "https://cachyos.org/download",
     "strengths": ["Performance-optimized", "Gaming tweaks", "Multiple DEs including Hyprland", "Custom kernels", "Arch-based"],
     "weaknesses": ["Rolling release", "Requires maintenance", "Smaller community than Arch", "Performance focus not for everyone"],
-    "similar_distros": ["garuda_linux", "arch_linux", "endeavouros"]
+    "similar_distros": ["garuda-linux", "arch-linux", "endeavouros"]
   },
   {
     "id": "biglinux",
     "name": "BigLinux",
-    "version": "2026-07-13",
+    "version": "Rolling",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "development"],
     "min_ram_gb": 4,
@@ -1360,19 +1360,19 @@
     "min_disk_gb": 25,
     "cpu_architecture": ["x86_64"],
     "desktop_environments": ["KDE Plasma", "GNOME"],
-    "release_model": "stable_lts",
-    "package_manager": "apt",
+    "release_model": "semi_rolling",
+    "package_manager": "pacman",
     "community_support": "good",
     "professional_support": false,
     "documentation_quality": "high",
     "philosophy": "pragmatic",
-    "based_on": "ubuntu",
+    "based_on": "arch",
     "description": "BigLinux is a Brazilian Ubuntu-based distribution featuring the BigDE desktop environment with a focus on ease of use and Brazilian localization.",
     "official_website": "https://biglinux.com.br",
     "download_page": "https://biglinux.com.br/download",
     "strengths": ["Brazilian localization", "Custom BigDE", "Ubuntu-based", "Beginner-friendly", "Good for Portuguese speakers"],
     "weaknesses": ["Smaller international community", "Brazil-focused", "Less software than Ubuntu", "Limited English documentation"],
-    "similar_distros": ["ubuntu", "kubuntu", "linux_mint"]
+    "similar_distros": ["ubuntu", "kubuntu", "linux-mint"]
   },
   {
     "id": "reborn-os",
@@ -1397,12 +1397,12 @@
     "download_page": "https://rebornos.org/download",
     "strengths": ["Graphical installer", "Multiple DE options", "Arch-based", "Custom repository", "Good documentation"],
     "weaknesses": ["Rolling release", "Smaller than Manjaro", "Requires maintenance", "Less popular than EndeavourOS"],
-    "similar_distros": ["arch_linux", "manjaro", "endeavouros"]
+    "similar_distros": ["arch-linux", "manjaro", "endeavouros"]
   },
   {
     "id": "raspberry-pi-os",
     "name": "Raspberry Pi OS",
-    "version": "6.3 Trixie",
+    "version": "Trixie",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "development", "server"],
     "min_ram_gb": 0.5,
@@ -1422,7 +1422,7 @@
     "download_page": "https://www.raspberrypi.com/software/operating-systems/",
     "strengths": ["Raspberry Pi optimized", "Excellent documentation", "Beginner-friendly", "Large community", "Educational focus"],
     "weaknesses": ["ARM only", "Limited to Raspberry Pi hardware", "Older software", "Not for x86 systems"],
-    "similar_distros": ["debian", "ubuntu", "manjaro_arm"]
+    "similar_distros": ["debian", "ubuntu"]
   },
   {
     "id": "nitrux",
@@ -1436,7 +1436,7 @@
     "cpu_architecture": ["x86_64"],
     "desktop_environments": ["KDE Plasma", "MATE", "XFCE"],
     "release_model": "semi_rolling",
-    "package_manager": "apt",
+    "package_manager": "multiple",
     "community_support": "good",
     "professional_support": false,
     "documentation_quality": "high",
@@ -1447,7 +1447,7 @@
     "download_page": "https://nxos.org/download/",
     "strengths": ["AppImage-first approach", "No systemd", "KDE Plasma", "Debian-based", "Modular"],
     "weaknesses": ["Smaller community", "AppImage limitations", "Newer project", "Less documentation than Debian"],
-    "similar_distros": ["kde_neon", "kubuntu", "debian"]
+    "similar_distros": ["kde-neon", "kubuntu", "debian"]
   },
   {
     "id": "bedrock-linux",
@@ -1460,7 +1460,7 @@
     "min_disk_gb": 20,
     "cpu_architecture": ["x86_64"],
     "desktop_environments": ["Any"],
-    "release_model": "rolling",
+    "release_model": "fixed_release",
     "package_manager": "multiple",
     "community_support": "good",
     "professional_support": false,
@@ -1472,32 +1472,7 @@
     "download_page": "https://bedrocklinux.org/getting-started/",
     "strengths": ["Mix multiple distros", "Use any package manager", "Unique approach", "Flexible", "Educational"],
     "weaknesses": ["Expert only", "Complex setup", "Not for beginners", "High maintenance", "Experimental"],
-    "similar_distros": ["nixos", "guix", "gentoo"]
-  },
-  {
-    "id": "clear-linux-os",
-    "name": "Clear Linux OS",
-    "version": "Rolling",
-    "experience_level": ["advanced", "expert"],
-    "use_cases": ["development", "server", "performance"],
-    "min_ram_gb": 2,
-    "recommended_ram_gb": 4,
-    "min_disk_gb": 10,
-    "cpu_architecture": ["x86_64"],
-    "desktop_environments": ["GNOME"],
-    "release_model": "rolling",
-    "package_manager": "swupd",
-    "community_support": "good",
-    "professional_support": true,
-    "documentation_quality": "high",
-    "philosophy": "pragmatic",
-    "based_on": "independent",
-    "description": "Clear Linux OS is an Intel-optimized rolling distribution focused on performance, security, and cloud-native computing with minimal footprint.",
-    "official_website": "https://clearlinux.org",
-    "download_page": "https://clearlinux.org/downloads/",
-    "strengths": ["Intel-optimized", "Performance-focused", "Minimal footprint", "Rolling release", "Cloud-native"],
-    "weaknesses": ["Intel optimized only", "Not beginner-friendly", "Limited software", "x86_64 only", "Minimal GUI"],
-    "similar_distros": ["fedora", "arch_linux", "alpine_linux"]
+    "similar_distros": ["nixos", "gentoo"]
   },
   {
     "id": "slitaz",
@@ -1510,7 +1485,7 @@
     "min_disk_gb": 1,
     "cpu_architecture": ["x86_64", "i386", "arm"],
     "desktop_environments": ["LXDE", "LXQt", "Openbox"],
-    "release_model": "stable_lts",
+    "release_model": "rolling",
     "package_manager": "tazpkg",
     "community_support": "good",
     "professional_support": false,
@@ -1522,7 +1497,7 @@
     "download_page": "https://www.slitaz.org/en/get/",
     "strengths": ["Extremely lightweight", "Fast", "Secure", "Runs on very old hardware", "Live CD/USB"],
     "weaknesses": ["Expert only", "Very limited software", "Not for daily use", "Small community", "Minimal documentation"],
-    "similar_distros": ["tiny_core_linux", "puppy_linux", "alpine_linux"]
+    "similar_distros": ["tiny-core-linux", "puppy-linux", "alpine-linux"]
   },
   {
     "id": "kodachi",
@@ -1541,13 +1516,13 @@
     "professional_support": false,
     "documentation_quality": "high",
     "philosophy": "privacy",
-    "based_on": "debian",
+    "based_on": "ubuntu",
     "description": "Kodachi is a privacy-focused live OS with built-in VPN, Tor, encryption tools, and security hardening for anonymous browsing.",
     "official_website": "https://www.kodachi.org",
     "download_page": "https://www.kodachi.org/#download",
     "strengths": ["Privacy-focused", "Built-in VPN/Tor", "Pre-configured security", "Live system", "Easy to use"],
     "weaknesses": ["Not for daily use", "Slower over VPN/Tor", "Limited software", "Rolling can break", "Smaller community"],
-    "similar_distros": ["tails", "qubes_os", "parrot_os"]
+    "similar_distros": ["tails", "qubes-os", "parrot-os"]
   },
   {
     "id": "openmediavault",
@@ -1572,6 +1547,6 @@
     "download_page": "https://www.openmediavault.org/download/",
     "strengths": ["NAS-focused", "Web-based management", "Debian-based", "Good documentation", "File sharing protocols"],
     "weaknesses": ["Not for desktop use", "Server-focused", "Limited software", "Requires knowledge", "Web UI only"],
-    "similar_distros": ["debian", "ubuntu_server", "truenas"]
+    "similar_distros": ["debian"]
   }
 ]
