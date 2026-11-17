@@ -113,5 +113,5 @@ const articleData = {
     </div>
   </div>
 
-  <script type="application/ld+json" set:html={JSON.stringify(articleData)}></script>
+  <script type="application/ld+json" set:html={JSON.stringify(articleData).replace(/</g, '\\u003c')}></script>
 </Layout>

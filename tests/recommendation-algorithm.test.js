@@ -434,3 +434,55 @@ describe('countMatches desktop-environment arm', () => {
     expect(countMatches(swayDistro, prefs({ desktopEnvironment: 'i3' }))).toBeGreaterThanOrEqual(1);
   });
 });
+
+describe('distros.json schema', () => {
+  const STRING_FIELDS = ['id', 'name', 'version', 'description', 'official_website', 'download_page', 'release_model', 'package_manager', 'community_support', 'documentation_quality', 'philosophy', 'based_on'];
+  const ARRAY_FIELDS = ['experience_level', 'use_cases', 'cpu_architecture', 'desktop_environments', 'strengths', 'weaknesses', 'similar_distros'];
+  const ENUMS = {
+    release_model: ['stable_lts', 'fixed_release', 'rolling', 'semi_rolling'],
+    package_manager: ['apt', 'dnf', 'pacman', 'zypper', 'eopkg', 'nix', 'portage', 'slackpkg', 'xbps', 'apk', 'petget', 'tce', 'rpm-ostree', 'multiple', 'swupd', 'tazpkg'],
+    experience_level: ['beginner', 'intermediate', 'advanced', 'expert'],
+    use_cases: ['general_desktop', 'development', 'server', 'old_hardware', 'content_creation', 'gaming', 'security', 'penetration_testing', 'privacy', 'rescue', 'nas'],
+  };
+
+  it('has unique hyphenated ids', () => {
+    const ids = distros.map(d => d.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    ids.forEach(id => expect(id).toMatch(/^[a-z0-9-]+$/));
+  });
+
+  it('every entry carries required fields with correct types', () => {
+    distros.forEach(d => {
+      STRING_FIELDS.forEach(k => expect(typeof d[k], `${d.id}.${k}`).toBe('string'));
+      ARRAY_FIELDS.forEach(k => expect(Array.isArray(d[k]), `${d.id}.${k}`).toBe(true));
+      expect(typeof d.min_ram_gb).toBe('number');
+      expect(typeof d.min_disk_gb).toBe('number');
+    });
+  });
+
+  it('respects enum vocabularies the scorers rely on', () => {
+    distros.forEach(d => {
+      expect(ENUMS.release_model, d.id).toContain(d.release_model);
+      expect(ENUMS.package_manager, d.id).toContain(d.package_manager);
+      d.experience_level.forEach(v => expect(ENUMS.experience_level, `${d.id}:${v}`).toContain(v));
+      d.use_cases.forEach(v => expect(ENUMS.use_cases, `${d.id}:${v}`).toContain(v));
+    });
+  });
+
+  it('contains no HTML markup or unsafe schemes — data is rendered via innerHTML', () => {
+    const text = JSON.stringify(distros);
+    expect(text).not.toMatch(/<\/?[a-zA-Z]/);
+    expect(text).not.toMatch(/javascript:/i);
+    distros.forEach(d => {
+      expect(d.official_website, d.id).toMatch(/^https:\/\//);
+      expect(d.download_page, d.id).toMatch(/^https:\/\//);
+    });
+  });
+
+  it('every similar_distros reference resolves to a real id', () => {
+    const ids = new Set(distros.map(d => d.id));
+    distros.forEach(d => (d.similar_distros || []).forEach(s => {
+      expect(ids.has(s), `${d.id} -> ${s}`).toBe(true);
+    }));
+  });
+});

@@ -29,7 +29,7 @@ import distros from '../data/distros.json';
     <p>Security-focused: Qubes OS, Tails, Kali Linux, Parrot OS, Whonix</p>
   </div>
 
-  <script type="application/json" id="wizard-data" set:html={JSON.stringify({ questions, distros })}></script>
+  <script type="application/json" id="wizard-data" set:html={JSON.stringify({ questions, distros }).replace(/</g, '\\u003c')}></script>
 
 <script>
   import {
