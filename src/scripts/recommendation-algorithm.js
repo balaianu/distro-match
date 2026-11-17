@@ -81,7 +81,7 @@ export function scoreHardware(distro, hardware) {
 
   if (hardware.ram && hardware.ram !== 'not_sure') {
     const ramMap = {
-      lt_2gb: 0,
+      lt_2gb: 2,
       '2_4gb': 2,
       '4_8gb': 4,
       '8_16gb': 8,
@@ -110,7 +110,7 @@ export function scoreHardware(distro, hardware) {
 
   if (hardware.disk && hardware.disk !== 'not_sure') {
     const diskMap = {
-      lt_20gb: 0,
+      lt_20gb: 20,
       '20_50gb': 20,
       '50_100gb': 50,
       gt_100gb: 100,
@@ -124,26 +124,26 @@ export function scoreHardware(distro, hardware) {
   return score;
 }
 
+const DE_MAP = {
+  gnome: ['GNOME'],
+  kde: ['KDE Plasma'],
+  xfce: ['XFCE'],
+  mate: ['MATE'],
+  cinnamon: ['Cinnamon'],
+  pantheon: ['Pantheon'],
+  i3: ['i3', 'Sway'],
+  lxqt: ['LXQt', 'LXDE'],
+};
+
 export function scoreDesktopEnvironment(distro, preference) {
   if (!preference || (Array.isArray(preference) && preference.length === 0) || preference === 'no_preference') return 1;
-
-  const deMap = {
-    gnome: ['GNOME'],
-    kde: ['KDE Plasma'],
-    xfce: ['XFCE'],
-    mate: ['MATE'],
-    cinnamon: ['Cinnamon'],
-    pantheon: ['Pantheon'],
-    i3: ['i3', 'Sway'],
-    lxqt: ['LXQt', 'LXDE'],
-  };
 
   const preferences = (Array.isArray(preference) ? preference : [preference]).filter(p => p !== 'no_preference');
   if (preferences.length === 0) return 1;
   let totalScore = 0;
 
   for (const pref of preferences) {
-    const acceptableDEs = deMap[pref] || [];
+    const acceptableDEs = DE_MAP[pref] || [];
     if (acceptableDEs.length === 0) {
       totalScore += 0.5;
       continue;
@@ -416,7 +416,7 @@ export function getRecommendations(preferences, distros) {
 }
 
 // Count how many preferences a distro matches
-function countMatches(distro, preferences) {
+export function countMatches(distro, preferences) {
   let matches = 0;
 
   // Experience level
@@ -432,10 +432,10 @@ function countMatches(distro, preferences) {
     }
   }
 
-  // Desktop environment (handle arrays)
+  // Desktop environment (handle arrays; map pref ids to distro vocabulary like scoreDesktopEnvironment)
   if (preferences.desktopEnvironment) {
     const des = Array.isArray(preferences.desktopEnvironment) ? preferences.desktopEnvironment : [preferences.desktopEnvironment];
-    if (des.some(de => distro.desktop_environments.includes(de))) {
+    if (des.some(de => (DE_MAP[de] || [de]).some(name => distro.desktop_environments.includes(name)))) {
       matches++;
     }
   }

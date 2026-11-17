@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateScores, getRecommendations } from '../src/scripts/recommendation-algorithm.js';
+import { calculateScores, getRecommendations, scoreHardware, countMatches } from '../src/scripts/recommendation-algorithm.js';
 import distros from '../src/data/distros.json';
 
 // Helper: find a distro by id from the scored results
@@ -410,5 +410,27 @@ describe('sentinels inside multi-select arrays', () => {
     const withSentinel = calculateScores(prefs({ supportLevel: ['no_preference'] }), distros);
     const without = calculateScores(prefs(), distros);
     withSentinel.forEach((d, i) => expect(d.score).toBe(without[i].score));
+  });
+});
+
+describe('hardware floor thresholds', () => {
+  it('lt_2gb penalizes heavy distros but not genuinely small ones', () => {
+    const tiny = { min_ram_gb: 0.5, cpu_architecture: ['x86_64'], min_disk_gb: 0.1 };
+    const heavy = { min_ram_gb: 4, cpu_architecture: ['x86_64'], min_disk_gb: 0.1 };
+    const hw = { ram: 'lt_2gb', disk: 'lt_20gb', type: null };
+    expect(scoreHardware(tiny, hw)).toBe(1);
+    expect(scoreHardware(heavy, hw)).toBeLessThan(1);
+  });
+});
+
+describe('countMatches desktop-environment arm', () => {
+  it('counts kde preference against distros listing KDE Plasma', () => {
+    const solus = distros.find(d => d.id === 'solus');
+    expect(countMatches(solus, prefs({ desktopEnvironment: 'kde' }))).toBe(1);
+  });
+
+  it('counts i3 preference against distros listing i3 or Sway', () => {
+    const swayDistro = distros.find(d => d.desktop_environments.includes('Sway'));
+    expect(countMatches(swayDistro, prefs({ desktopEnvironment: 'i3' }))).toBeGreaterThanOrEqual(1);
   });
 });

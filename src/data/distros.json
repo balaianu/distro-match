@@ -834,7 +834,7 @@
     "recommended_ram_gb": 8,
     "min_disk_gb": 20,
     "cpu_architecture": ["x86_64"],
-    "desktop_environments": ["Budgie", "GNOME", "Plasma", "MATE", "XFCE"],
+    "desktop_environments": ["Budgie", "GNOME", "KDE Plasma", "XFCE"],
     "release_model": "semi_rolling",
     "package_manager": "eopkg",
     "community_support": "good",
