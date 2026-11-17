@@ -49,12 +49,12 @@ export function scoreUseCase(distro, preference) {
     privacy: ['general_desktop', 'privacy'],
   };
 
-  const preferences = Array.isArray(preference) ? preference : [preference];
+  const preferences = (Array.isArray(preference) ? preference : [preference]).filter(p => p !== 'not_sure');
+  if (preferences.length === 0) return 1;
   let totalScore = 0;
   let exactMatches = 0;
 
   for (const pref of preferences) {
-    if (pref === 'not_sure') continue;
     const acceptableUseCases = useCaseMap[pref] || [pref];
     const exactMatch = distro.use_cases.includes(pref);
     const acceptableMatch = distro.use_cases.some(uc => acceptableUseCases.includes(uc));
@@ -138,11 +138,11 @@ export function scoreDesktopEnvironment(distro, preference) {
     lxqt: ['LXQt', 'LXDE'],
   };
 
-  const preferences = Array.isArray(preference) ? preference : [preference];
+  const preferences = (Array.isArray(preference) ? preference : [preference]).filter(p => p !== 'no_preference');
+  if (preferences.length === 0) return 1;
   let totalScore = 0;
 
   for (const pref of preferences) {
-    if (pref === 'no_preference') continue;
     const acceptableDEs = deMap[pref] || [];
     if (acceptableDEs.length === 0) {
       totalScore += 0.5;
@@ -206,11 +206,11 @@ export function scoreSupportLevel(distro, preference) {
     minimal: ['good', 'high'],
   };
 
-  const preferences = Array.isArray(preference) ? preference : [preference];
+  const preferences = (Array.isArray(preference) ? preference : [preference]).filter(p => p !== 'no_preference');
+  if (preferences.length === 0) return 1;
   let totalScore = 0;
 
   for (const pref of preferences) {
-    if (pref === 'no_preference') continue;
     const acceptableSupport = supportMap[pref] || [];
     let score = 0;
     if (acceptableSupport.includes(distro.community_support)) score += 0.5;

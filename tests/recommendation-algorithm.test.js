@@ -380,3 +380,35 @@ describe('score normalization (bug fix verification)', () => {
     expect(ubuntu.score).toBeGreaterThanOrEqual(90);
   });
 });
+
+describe('sentinels inside multi-select arrays', () => {
+  it("'not_sure' alone in useCase is neutral, not zero", () => {
+    const withSentinel = calculateScores(prefs({ useCase: ['not_sure'] }), distros);
+    const without = calculateScores(prefs(), distros);
+    withSentinel.forEach((d, i) => expect(d.score).toBe(without[i].score));
+  });
+
+  it("mixed 'not_sure' + real picks score like the real picks alone", () => {
+    const mixed = calculateScores(prefs({ useCase: ['server', 'not_sure'] }), distros);
+    const clean = calculateScores(prefs({ useCase: ['server'] }), distros);
+    mixed.forEach((d, i) => expect(d.score).toBe(clean[i].score));
+  });
+
+  it("'no_preference' alone in desktopEnvironment is neutral", () => {
+    const withSentinel = calculateScores(prefs({ desktopEnvironment: ['no_preference'] }), distros);
+    const without = calculateScores(prefs(), distros);
+    withSentinel.forEach((d, i) => expect(d.score).toBe(without[i].score));
+  });
+
+  it("mixed 'no_preference' + real DE picks score like the real picks alone", () => {
+    const mixed = calculateScores(prefs({ desktopEnvironment: ['gnome', 'no_preference'] }), distros);
+    const clean = calculateScores(prefs({ desktopEnvironment: ['gnome'] }), distros);
+    mixed.forEach((d, i) => expect(d.score).toBe(clean[i].score));
+  });
+
+  it("'no_preference' alone in supportLevel is neutral", () => {
+    const withSentinel = calculateScores(prefs({ supportLevel: ['no_preference'] }), distros);
+    const without = calculateScores(prefs(), distros);
+    withSentinel.forEach((d, i) => expect(d.score).toBe(without[i].score));
+  });
+});
