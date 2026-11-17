@@ -227,7 +227,7 @@
   {
     "id": "fedora",
     "name": "Fedora",
-    "version": "44 Workstation",
+    "version": "45 Workstation",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["general_desktop", "development", "server"],
     "min_ram_gb": 4,
@@ -527,7 +527,7 @@
   {
     "id": "linux-lite",
     "name": "Linux Lite",
-    "version": "8.0",
+    "version": "8.2",
     "experience_level": ["beginner"],
     "use_cases": ["general_desktop", "old_hardware"],
     "min_ram_gb": 1,
@@ -652,7 +652,7 @@
   {
     "id": "fedora-kde",
     "name": "Fedora KDE",
-    "version": "44",
+    "version": "45",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["general_desktop", "development"],
     "min_ram_gb": 4,
@@ -677,7 +677,7 @@
   {
     "id": "fedora-xfce",
     "name": "Fedora XFCE",
-    "version": "44",
+    "version": "45",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["general_desktop", "old_hardware"],
     "min_ram_gb": 2,
@@ -727,7 +727,7 @@
   {
     "id": "rhel",
     "name": "Red Hat Enterprise Linux",
-    "version": "10.2",
+    "version": "10.3",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["server", "development"],
     "min_ram_gb": 2,
@@ -752,7 +752,7 @@
   {
     "id": "rocky-linux",
     "name": "Rocky Linux",
-    "version": "10.2",
+    "version": "10.3",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["server", "development"],
     "min_ram_gb": 2,
@@ -777,7 +777,7 @@
   {
     "id": "almalinux",
     "name": "AlmaLinux",
-    "version": "10.2",
+    "version": "10.3",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["server", "development"],
     "min_ram_gb": 2,
@@ -952,7 +952,7 @@
   {
     "id": "alpine-linux",
     "name": "Alpine Linux",
-    "version": "3.24.2",
+    "version": "3.24.4",
     "experience_level": ["advanced", "expert"],
     "use_cases": ["server", "old_hardware"],
     "min_ram_gb": 0.3,
@@ -977,7 +977,7 @@
   {
     "id": "tails",
     "name": "Tails",
-    "version": "7.15",
+    "version": "7.17",
     "experience_level": ["beginner", "intermediate"],
     "use_cases": ["privacy", "security"],
     "min_ram_gb": 2,
@@ -1302,7 +1302,7 @@
   {
     "id": "vanilla-os",
     "name": "Vanilla OS",
-    "version": "2 Orchid",
+    "version": "3 Reunion",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["general_desktop", "development"],
     "min_ram_gb": 4,
@@ -1527,7 +1527,7 @@
   {
     "id": "openmediavault",
     "name": "OpenMediaVault",
-    "version": "8.5.10",
+    "version": "8.6.0",
     "experience_level": ["intermediate", "advanced"],
     "use_cases": ["server", "nas"],
     "min_ram_gb": 1,
